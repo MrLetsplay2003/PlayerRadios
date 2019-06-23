@@ -49,9 +49,6 @@ public class Main extends JavaPlugin {
 	public static String PLUGIN_VERSION;
 	public static Plugin pl;
 	private static Thread t, t2;
-//	public static String serverVersion;
-	public static int noteblockVersion;
-//	public static int /*itemVersion,*/ mcVersion;
 	public static boolean enabled;
 	public static boolean exportRunning = false;
 	public static Thread tempProcessThread;
@@ -67,71 +64,7 @@ public class Main extends JavaPlugin {
 		PLUGIN_VERSION = getDescription().getVersion();
 		Config.init();
 		PlayerManager.init();
-		switch(NMSVersion.getCurrentServerVersion()) {
-			case V1_8_R1:
-			case V1_8_R2:
-			case V1_8_R3:
-				noteblockVersion = 0;
-				break;
-			case V1_9_R1:
-			case V1_9_R2:
-			case V1_10_R1:
-			case V1_11_R1:
-				noteblockVersion = 1;
-				break;
-			case V1_12_R1:
-			case V1_13_R1:
-			case V1_13_R2:
-				noteblockVersion = 2;
-				break;
-			case UNKNOWN:
-			default:
-				getLogger().info("Server is using unknown/unsupported MC version (version < 1.8?), enabling anyway (using 1.8 compat)...");
-				noteblockVersion = 0;
-				break;
-		}
-//		itemVersion = 1;
-//		if(ver.contains("MC: 1.8")) {
-//			serverVersion = "1.8.x";
-//			noteblockVersion = 0;
-//			mcVersion = 1;
-//		}else if(ver.contains("MC: 1.9")) {
-//			serverVersion = "1.9.x";
-//			noteblockVersion = 1;
-//			mcVersion = 1;
-//		}else if(ver.contains("MC: 1.10")) {
-//			serverVersion = "1.10.x";
-//			noteblockVersion = 1;
-//			mcVersion = 1;
-//		}else if(ver.contains("MC: 1.11")) {
-//			serverVersion = "1.11.x";
-//			noteblockVersion = 1;
-//			mcVersion = 1;
-//		}else if(ver.contains("MC: 1.12")) {
-//			serverVersion = "1.12.x";
-//			noteblockVersion = 2;
-//			mcVersion = 1;
-//		}else if(ver.contains("MC: 1.13")) {
-//			serverVersion = "1.13.x";
-//			noteblockVersion = 2;
-//			mcVersion = 2;
-////			itemVersion = 2;
-//		}else {
-//			getLogger().info("Server is using unknown/unsupported MC version (version < 1.8?), enabling anyway...");
-//			serverVersion = "(unknown)";
-//			noteblockVersion = 0;
-////			itemVersion = 1;
-//			mcVersion = 1;
-//		}
-		if(Config.noteblock_version >= 0) {
-			getLogger().info("Noteblock version was changed manually in the config. It's recommended not to change it as it could cause errors");
-			if(Config.noteblock_version <= 2) {
-				noteblockVersion = Config.noteblock_version;
-			}else {
-				getLogger().info("Found invalid noteblock version in the config, falling back to automatic");
-			}
-		}
-		getLogger().info("Detected MC server version: " + NMSVersion.getCurrentServerVersion().getFriendlyName() + " (NMS version: " + NMSVersion.getCurrentServerVersion().getNMSName() + ", Noteblock version: " + noteblockVersion);
+		getLogger().info("Detected MC server version: " + NMSVersion.getCurrentServerVersion().getFriendlyName() + " (NMS version: " + NMSVersion.getCurrentServerVersion().getNMSName());
 		Bukkit.getPluginManager().registerEvents(new Events(), this);
 		if (Config.enable_update_check) {
 			getLogger().info("Checking for update...");

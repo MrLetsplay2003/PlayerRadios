@@ -23,7 +23,7 @@ public class Config {
 		world_list_blacklist, disable_commands, disable_commands_all, songsettings_auto, save_last_listened, allow_station_name_edit;
 	
 	public static int max_station_name_length, max_stations_per_player, sleep_ticks, result_amount, max_type_time, 
-		thread_on_process_when, default_station, submit_max_file_size, noteblock_version, gui_refresh_interval_ms, autodelete_days;
+		thread_on_process_when, default_station, submit_max_file_size, gui_refresh_interval_ms, autodelete_days;
 	
 	public static String inventory_name, default_author, language;
 	public static List<String> true_keywords, world_list;
@@ -47,27 +47,26 @@ public class Config {
 	}
 	
 	public static void init(){
-		config.setHeader("Plugin version: "+Main.PLUGIN_VERSION+"\n");
-		config.setComment("use-uuids", "Should always be enabled (will automatically be disabled if server is in offline/cracked mode)");
-		config.setComment("sleep-ticks", "Determines the amount of ticks to wait after song end. If you don't know what to set this to, just leave it as is");
-		config.setComment("show-automatically-named", "If enabled, songs that are automatically named by file name (because they don't contain a title in the NBS file) will have the suffix \"(Automatically named)\"");
-		config.setComment("use-alternate-nbs-import", "Disable this, if you think that the imported NBS songs sound weird. I added this because a lot of notes failed to import correctly because of a too high/low pitch. This alters the pitch so it's in a vaild range");
-		config.setComment("detect-original-author", "If set to true, the plugin will try to detect an author for songs that don't have one set");
-		config.setComment("default-original-author", "The default author to use when no author was found");
-		config.setComment("use-thread-on-process", "Whether to use a thread when importing/exporting/loading songs. The \"use-thread-on-process\" option defines starting at how many songs a thread should be used");
-		config.setComment("use-fixed-playback-system", "Fixes the playback of songs with some tempos + Will increase song performance (Songs will be run in external thread = Songs will not be influenced by server lag). Disable this if you're having issues");
-		config.setComment("default-station", "The default station that should play automatically when joining on the server. Set to -1 for none");
-		config.setComment("language", "The language (file) to be used by the plugin. Will generate a new file if it doesn't exist");
-		config.setComment("true-keywords", "Alternative keywords for \"true\" to be accepted by the plugin");
-		config.setComment("fix-song-ids", "Enable this and reload to fix all song ids (Disable it again afterwards, slows down the plugin). Recommended when updating from a version older than 2.4");
-		config.setComment("submit.enable", "When enabled, users can submit their own songs via \"/pr submit <Link>\". If \"needs-permission\" is set to true, users need the permission \""+PERM_SUBMIT+"\" to do so");
-		config.setComment("remove-icon-items", "If enabled, players will not get the item they set as station icon returned");
-		config.setComment("noteblock-version", "The noteblock version to use (needed because of the bukkit/spigot API): -1 = auto, 0 = pre-1.9, 1 = 1.9.x - 1.11.x, 2 = 1.12.x");
-		config.setComment("convert-uuids", "Automatically try to convert uuids when use-uuids is switched. Disable this if you're having issues");
-		config.setComment("auto-close-song-gui", "If enabled, PlayerRadios will automatically close the song add gui when you've added a song");
-		config.setComment("disable-commands.do", "If enabled, players won't be able to use /pr station <...> commands");
-		config.setComment("disable-commands.all", "This will disable all commands (including /pr <search/playlist/...>) except for admin commands (/pr <reload/version/...>) and /pr help");
-		config.setComment("autodelete", "If enabled, stations will automatically get deleted after the user has been offline/inactive for a certain amount of time (You can enable \"dontautodelete\" in the stations file for a station to not be auto-deleted)");
+		config.setHeader(" Plugin version: "+Main.PLUGIN_VERSION+"\n");
+		config.setComment("use-uuids", " Should always be enabled (will automatically be disabled if server is in offline/cracked mode)");
+		config.setComment("sleep-ticks", " Determines the amount of ticks to wait after song end. If you don't know what to set this to, just leave it as is");
+		config.setComment("show-automatically-named", " If enabled, songs that are automatically named by file name (because they don't contain a title in the NBS file) will have the suffix \"(Automatically named)\"");
+		config.setComment("use-alternate-nbs-import", " Disable this, if you think that the imported NBS songs sound weird. I added this because a lot of notes failed to import correctly because of a too high/low pitch. This alters the pitch so it's in a vaild range");
+		config.setComment("detect-original-author", " If set to true, the plugin will try to detect an author for songs that don't have one set");
+		config.setComment("default-original-author", " The default author to use when no author was found");
+		config.setComment("use-thread-on-process", " Whether to use a thread when importing/exporting/loading songs. The \"use-thread-on-process\" option defines starting at how many songs a thread should be used");
+		config.setComment("use-fixed-playback-system", " Fixes the playback of songs with some tempos + Will increase song performance (Songs will be run in external thread = Songs will not be influenced by server lag). Disable this if you're having issues");
+		config.setComment("default-station", " The default station that should play automatically when joining on the server. Set to -1 for none");
+		config.setComment("language", " The language (file) to be used by the plugin. Will generate a new file if it doesn't exist");
+		config.setComment("true-keywords", " Alternative keywords for \"true\" to be accepted by the plugin");
+		config.setComment("fix-song-ids", " Enable this and reload to fix all song ids (Disable it again afterwards, slows down the plugin). Recommended when updating from a version older than 2.4");
+		config.setComment("submit.enable", " When enabled, users can submit their own songs via \"/pr submit <Link>\". If \"needs-permission\" is set to true, users need the permission \""+PERM_SUBMIT+"\" to do so");
+		config.setComment("remove-icon-items", " If enabled, players will not get the item they set as station icon returned");
+		config.setComment("convert-uuids", " Automatically try to convert uuids when use-uuids is switched. Disable this if you're having issues");
+		config.setComment("auto-close-song-gui", " If enabled, PlayerRadios will automatically close the song add gui when you've added a song");
+		config.setComment("disable-commands.do", " If enabled, players won't be able to use /pr station <...> commands");
+		config.setComment("disable-commands.all", " This will disable all commands (including /pr <search/playlist/...>) except for admin commands (/pr <reload/version/...>) and /pr help");
+		config.setComment("autodelete", " If enabled, stations will automatically get deleted after the user has been offline/inactive for a certain amount of time (You can enable \"dontautodelete\" in the stations file for a station to not be auto-deleted)");
 		
 		enable_update_check = config.getBoolean("update-check.enable", true, true);
 		update_check_on_join = config.getBoolean("update-check.on-join", true, true);
@@ -95,7 +94,6 @@ public class Config {
 		submit_needs_perm = config.getBoolean("submit.needs-permission", true, true);
 		submit_max_file_size = config.getInt("submit.max-file-size-kb", 2048, true);
 		remove_icon_items = config.getBoolean("remove-icon-items", true, true);
-		noteblock_version = config.getInt("noteblock-version", -1, true);
 		allow_color = config.getBoolean("color.enable", true, true);
 		color_needs_permission = config.getBoolean("color.needs-permission", true, true);
 		gui_refresh_interval_ms = config.getInt("gui-refresh-interval-ms", 1000, true);
@@ -316,7 +314,10 @@ public class Config {
 	}
 	
 	public static String getHelpMessage(String cmd, String label, String args, String... params) {
-		String s = getMessage("help.layout").replace("%description%", getMessage("help."+cmd)).replace("%command%", label).replace("%args%", args);
+		String s = getMessage("help.layout")
+				.replace("%description%", getMessage("help."+cmd))
+				.replace("%command%", label)
+				.replace("%args%", args);
 		if(params.length%2 != 0) return s;
 		for(int i = 0; i < params.length; i+=2) {
 			s.replace("%"+params[i]+"%", params[i+1]);

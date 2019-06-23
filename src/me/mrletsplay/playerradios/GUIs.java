@@ -138,6 +138,11 @@ public class GUIs {
 			}
 		});
 		
+		GUIElement gPane = new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.BLACK_STAINED_GLASS_PANE, 1, "§0"));
+		for(int i = 5*9; i < 6*9; i++) {
+			builder.addElement(i, gPane);
+		}
+		
 		builder.addElement(45, new StaticGUIElement(ItemUtils.createItem(Material.BARRIER, 1, 0, Config.getMessage("gui.stop-listening"))).setAction(new GUIElementAction() {
 			
 			@Override
@@ -170,7 +175,7 @@ public class GUIs {
 			}
 		}));
 		
-		builder.addElement(50, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.PURPLE_BANNER, 1, Config.getMessage("gui.all-stations"))).setAction(new GUIElementAction() {
+		builder.addElement(50, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.GREEN_BANNER, 1, Config.getMessage("gui.all-stations"))).setAction(new GUIElementAction() {
 			
 			@Override
 			public void onAction(GUIElementActionEvent event) {
@@ -179,7 +184,7 @@ public class GUIs {
 			}
 		}));
 		
-		builder.addElement(51, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.GRAY_BANNER, 1, Config.getMessage("gui.your-stations"))).setAction(new GUIElementAction() {
+		builder.addElement(51, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.ORANGE_BANNER, 1, Config.getMessage("gui.your-stations"))).setAction(new GUIElementAction() {
 			
 			@Override
 			public void onAction(GUIElementActionEvent event) {
@@ -633,6 +638,21 @@ public class GUIs {
 			}
 		});
 		
+		GUIElement gPane = new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.BLACK_STAINED_GLASS_PANE, 1, "§0"));
+		for(int i = 5*9; i < 6*9; i++) {
+			builder.addElement(i, gPane);
+		}
+		
+		builder.addElement(45, new StaticGUIElement(ItemUtils.createItem(ItemUtils.arrowLeft(VersionedDyeColor.RED), Config.getMessage("gui.stop-listening"))).setAction(new GUIElementAction() {
+			
+			@Override
+			public void onAction(GUIElementActionEvent event) {
+				int rID = (int) event.getGUIHolder().getProperty(Main.pl, "station_id");
+				Inventory inv = getStationGUI(event.getPlayer(), rID, 0);
+				event.getPlayer().openInventory(inv);
+			}
+		}));
+		
 		builder.addPreviousPageItem(52, ItemUtils.createItem(ItemUtils.arrowLeft(), Config.getMessage("gui.previous-page")));
 		builder.addNextPageItem(53, ItemUtils.createItem(ItemUtils.arrowRight(), Config.getMessage("gui.next-page")));
 		
@@ -641,15 +661,19 @@ public class GUIs {
 			public ItemStack getItem(GUIBuildEvent event) {
 				String sortBy = (String) event.getGUIHolder().getProperty(Main.pl, "sort_by");
 
+				VersionedMaterial m = VersionedMaterial.BLACK_BANNER;
 				String n = "§cError";
 				if(sortBy.equalsIgnoreCase("alphabet")) {
+					m = VersionedMaterial.BROWN_BANNER;
 					n = Config.getMessage("gui.songs.sorting-by").replace("%mode%", Config.getMessage("gui.songs.mode-alphabet"));
 				}else if(sortBy.equalsIgnoreCase("id")) {
+					m = VersionedMaterial.BLUE_BANNER;
 					n = Config.getMessage("gui.songs.sorting-by").replace("%mode%", Config.getMessage("gui.songs.mode-id"));
 				}else if(sortBy.equalsIgnoreCase("author")) {
+					m = VersionedMaterial.GREEN_BANNER;
 					n = Config.getMessage("gui.songs.sorting-by").replace("%mode%", Config.getMessage("gui.songs.mode-author"));
 				}
-				return ItemUtils.createItem(VersionedMaterial.GRAY_BANNER, 1, n);
+				return ItemUtils.createItem(m, 1, n);
 			}
 			
 		}.setAction(new GUIElementAction() {

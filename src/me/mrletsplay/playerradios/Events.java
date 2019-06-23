@@ -81,7 +81,7 @@ public class Events implements Listener {
 			}else {
 				e.getPlayer().sendMessage(Config.getMessage("station.name-too-long"));
 			}
-			e.getPlayer().openInventory(GUIs.getStationGUI(e.getPlayer(), id, 0));
+			Bukkit.getScheduler().runTask(Main.pl, () -> e.getPlayer().openInventory(GUIs.getStationGUI(e.getPlayer(), id, 0)));
 			e.setCancelled(true);
 		}
 	}

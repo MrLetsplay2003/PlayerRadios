@@ -1,6 +1,6 @@
 package me.mrletsplay.playerradios.util;
 
-import me.mrletsplay.playerradios.Main;
+import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 
 public enum NotePitch {
 	NOTE_0(0, 0.5F, 0.5F),
@@ -42,7 +42,7 @@ public enum NotePitch {
 	public static float getPitch(int note) {
 		for (NotePitch pitch : values()) {
 			if (pitch.note == note) {
-				return (Main.noteblockVersion == 0  ? pitch.pre1_9 : pitch.post1_9);
+				return (NMSVersion.getCurrentServerVersion().isOlderThan(NMSVersion.V1_9_R1)  ? pitch.pre1_9 : pitch.post1_9);
 			}
 		}
 
