@@ -1,0 +1,168 @@
+### CustomConfig version: 1.0
+station: 
+  gui: 
+    about: 
+      status-offline: §cОфлайн
+      status-online: §aОнлайн
+      playing-nothing: НЕТ
+      playing: §7Сейчас играет: %song-name%
+      listen: §3Левый клик для прослушивания станции
+      songs-no: нет
+      status: §7Ваша радиостанция: 
+      players-no: нет
+      change-icon: §3Правый клик, чтобы изменить значок
+      playing-color: §3
+      players: §3%players% §7игроков слушают вашу станцию
+      stop-listening: §3Нажмите, чтобы остановить прослушивание
+      info: §eИнформация
+      songs: §7Плейлист содержит §3%songs% §7композиций 
+    song: 
+      previous: §7Предыдущая песня
+      current: §7Выбрано
+      next: §7Следующая песня
+      remove: §7Удалить песню из плейлиста
+      currently-playing: §aЭта песня сейчас играет
+      add: §7Добавить песню в плейлист
+    not-running: §cВаша станция в настоящий момент не работает
+    play-mode: §7Режим воспроизведения %mode% §7заданных песен
+      whitelist: §8все выкл
+      blacklist: §8все, кроме
+    running: §cВы не можете этого сделать, пока ваша станция работает
+    rename: §7Переименуйте свою станцию
+    start: §aЗапустите свою станцию
+    drop-here: §7Положите предмет эдесь
+    skip-song: §7Пропустить текущую песню
+    stop: §cОстоновить станцию
+    loop: 
+      enabled: §aЦикличность включено
+      disabled: §cЦикличность выключено
+    playlist-empty: §cПлейлист вашей станции пуст
+    delete: §cУдалить станцию
+  song-doesnt-exist: %prefix% §cЭта песня не существует
+  track-skipped: %prefix% §aТрек пропущен
+  playlist: %prefix% §7Станция "%station-name%" (%station-id%) плай-лист (Цикличность: %loop%):
+  rename: %prefix% §7Введите новое название для своей станции:
+  playlist-entry-playing: §6%index%: §a%song-name% (ID трека: %song-id%)
+  too-many-stations: %prefix% §cВы не можете иметь более %max-stations% станций
+  started: %prefix% §aСтанция включена
+  not-your-station: %prefix% §cЭта станция не принадлежит вам
+  stopped: %prefix% §cСтанция остановлена
+  deleted: %prefix% §aСтанция §7%station-name% (%station-id%) §aудалена
+  cannot-modify: %prefix% §cВы не можете изменить плейлист станции, пока она включена
+  song-added: %prefix% §aПесня добавлена в плейлист
+  song-removed: %prefix% §aПесня удалена из плейлиста
+  set: 
+    loop: 
+      enable: %prefix% §aЦикличность включено
+      disable: %prefix% §cЦикличность выключено
+    name: %prefix% §aНазвание станции изменено с §7%old-name% §aна §7%new-name%
+  not-running: %prefix% §cВаша станция в настоящий момент не работает
+  name-too-long: %prefix% §cНазвание станции не может быть длиннее %max-name-length% знаков
+  rename-cancelled: %prefix% §cПереименования отменено. В следующий раз попробуйте немного быстрее
+  doesnt-exist: %prefix% §cЭта станция не существует
+  playlist-empty: %prefix% §7У станции "%station-name%" (%station-id%) плейлист пуст
+  already-running: %prefix% §cВаша станция уже запущена
+  song-not-on-playlist: %prefix% §cЭта песня отсутствует в плейлисте
+  rename-not-allowed: %prefix% §cПереименование станций запрещено
+  playlist-entry: §6%index%: §7%song-name% (ID трека: %song-id%)
+gui: 
+  your-stations: §7Ваши станции
+  previous-page: §7Предыдущая страница
+  back: §cВернуться
+  songs: 
+    sorting-by: §7Сортировка: %mode%
+    song: 
+      author: §8Оригинальный автор: §7%author%
+      by: §8Принадлежит: §7%maker%
+      id: §8ID трека: §7%id%
+    mode-alphabet: Алфавит
+    mode-id: ID
+    mode-author: Автор
+  about-station: 
+    online: §aСейчас вещает
+    playing: §7Текущий трек: %song-name%
+    manage: §3Правый клик, чтобы управлять
+    offline: §cСейчас офлайн
+    listen-time: §7Время прослушивания: §3%time%
+    playing-nothing: Ничего
+    owner: §7Владелец: §3%owner%
+    id: §7ID: §3%id%
+    playing-color: §3
+  stop-listening: §cНажмите, чтобы остановить прослушивание
+  create-station: §aСоздать станцию
+  next-page: §7Следущая страница
+  all-stations: §7Все станции сервера
+help: 
+  header: %prefix% §8| §7Помощь §8| §7%topic%
+  pr-version: Показывает текущую версию PlayerRadios и проверяет наличие обновления (если включено)
+  layout: §7§l/%command%%args% §r§8- %description%
+  pr-station-skip: Переход к следующему треку в плейлисте станции
+  pr-bugreport: Создать отчет об ошибке
+  pr-station-start-stop: Пуск / остановка станции
+  pr-station-playlist-add: Добавить трек в плейлист станции
+  pr-submit: Отправить / Загрузить трек в библиотеку песен сервера
+  pr-playlist: Показывает список треков станции, которую вы сейчас слушаете.
+  invalid-topic: §7Нет никакой помощи для "%topic%"
+  pr-station-playlist: Показывает плейлист станции
+  pr-station-set: Изменение настройки станции
+  pr-station-list: Списки всех ваших станций
+  pr-station-create: Создать станцию
+  pr-reload: Перезагружает PlayerRadios
+  pr-export: Экспортирует песню в указанный формат / Экспортирует настройки песни
+  use-topic-stations: §7Пишите §7§l/pr help stations §r§7для получения информации о станциях
+  pr-search: Поиск трека
+  pr: Открывает выбор станции GUI
+  pr-help: Показывает командную помощь (по определенной теме)
+  pr-station-delete: Удаление станции
+  pr-station-playlist-remove: Удалить трек из плейлиста станции
+  pr-station: Открывает управление станцией GUI
+submit: 
+  downloading: %prefix% §6Загрузка файла...
+  invalid-url: %prefix% §cНеверная ссылка
+  success: %prefix% §aИмпорт §7%count% §aтреков (Формат §7%format%§a)
+  reading: %prefix% §6Чтение треков из файла...
+  invalid-file: %prefix% §cФайл, который вы пытаетесь импортировать, не является допустимым файлом трека (NBS, SNG, RSNG)
+  file-too-big: %prefix% §cФайл слишком большой
+station-broadcast: %prefix% §8[§7%station-name%§8]: §7%message%
+export: 
+  done: %prefix% §aЭкспортируется как §7%file-name%
+  wait: %prefix% §6Экспорт §7%song-name%§6...
+  not-available: %prefix% §6Экспорт в виде SNG-архива недоступен для отдельных композиций
+  wait-all: %prefix% §6Экспорт §7%count% §6треков...
+  done-all: %prefix% §aЭкспортировано §7%count% §aтреков за §7%time% §a(§7%failed% §aошибок)
+  failed: %prefix% §cНе удалось выполнить экспорт. Проверить консоль для получения дополнительной информацию
+placeholderapi: 
+  listening: 
+    song: 
+      none: нет
+      format: %original-author% - %song-name% (принадлежит %author%) | %song-id%
+    station: 
+      none: нет
+      owner: 
+        none: -
+    time: 
+      none: -
+stations: %prefix% §7Ваши станции
+stopped-listening: %prefix% §cОстановлено прослушивание
+world-blacklisted: %prefix% §cPlayerRadios отключено в этом мире
+not-broadcasting: %prefix% §cСтанция §7%station-name% §cне транслируется
+song-changed: %prefix% §8[§7%station-name%§8]: §aСейчас играет: §7%song-name%
+process-already-running: §cПроцесс запущен. Подождите, пока все будет готово.
+time-format: s,min,h
+commands-disabled: %prefix% §cPlayerRadios команды отключены. Запустите /pr и используйте графический интерфейс
+not-listening: %prefix% §cВы не слушаете какие-либо станции
+search-results: %prefix% §7Лучшие результаты поиска:
+search-results-entry: §8%song-id%: §7%song-author% - %song-name% (принадлежит: %song-by%)
+bugreport: 
+  success: %prefix% §aСоздан отчет об ошибке: §7%link%§a. Отправить личное сообщение с найденной ошибкой по ссылке §7https://www.spigotmc.org/conversations/add?to=MrLetsplay
+stations-entry: §8%station-id%: §7%station-name%
+search-results-empty: §cРезультатов не найдено
+stopped-broadcasting: %prefix% §cСтанция §7%station-name% §cпрекратила вещание
+still-loading: %prefix% §cPlayerRadios все еще загружается
+stations-empty: %prefix% §7У вас нет каких-либо станций
+reload-complete: %prefix% §aПерезагрузка выполнена
+creation-disabled: %prefix% §cСоздание станций в настоящее время отключено
+station-created: 
+  1: %prefix% §aВаша станция §7"%station-name%" §a(ID станции §7%id%§a) создана
+  2: %prefix% §6Пишите §7/pr station %id% §6чтобы управлять вашей станцией
+station-changed: %prefix% §aСлушаете станцию: §7%station-name%
