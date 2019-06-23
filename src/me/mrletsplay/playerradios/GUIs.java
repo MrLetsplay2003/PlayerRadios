@@ -706,7 +706,7 @@ public class GUIs {
 		for(int i = 0; i < 9; i++) {
 			b.addElement(i, new StaticGUIElement(gPane));
 		}
-		b.addElement(2, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.LIGHT_GRAY_BANNER, 1, Config.getMessage("station.gui.drop-here"))).setAction(event -> {
+		b.addElement(4, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.LIGHT_GRAY_BANNER, 1, Config.getMessage("station.gui.drop-here"))).setAction(event -> {
 			if(event.getItemClickedWith() != null && !event.getItemClickedWith().getType().equals(Material.AIR)) {
 				int rID = (int) event.getGUIHolder().getProperty(Main.pl, "station_id");
 				RadioStation r = StationManager.getRadioStation(rID);
