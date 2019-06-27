@@ -1,170 +1,171 @@
-### CustomConfig version: 1.0
+### CustomConfig version: 2.0
 station: 
   gui: 
     about: 
-      status-offline: &cOffline
-      status-online: &aOnline
-      playing-nothing: Nichts
-      playing: &7Momentan spielt: &3%song-name%
-      listen: &3Klicke zum anhören der Station
-      songs-no: keine
-      status: &7Deine Station ist momentan: 
-      players-no: Keine
-      change-icon: &3Rechtsklicke um das Icon zu ändern
-      playing-color: &3
-      players: &3%players% &7Spieler hören deine Station an
-      stop-listening: &3Linksklicke um nicht mehr zuzuhören
-      info: &eInfo
-      songs: &7Die Playlist enthält &3%songs% &7Songs
+      status-offline: "&cOffline"
+      status-online: "&aOnline"
+      playing-nothing: "Nichts"
+      playing: "&7Momentan spielt: &3%song-name%"
+      listen: "&3Klicke zum anhören der Station"
+      songs-no: "keine"
+      status: "&7Deine Station ist momentan: "
+      players-no: "Keine"
+      change-icon: "&3Rechtsklicke um das Icon zu ändern"
+      playing-color: "&3"
+      players: "&3%players% &7Spieler hören deine Station an"
+      stop-listening: "&3Linksklicke um nicht mehr zuzuhören"
+      info: "&eInfo"
+      songs: "&7Die Playlist enthält &3%songs% &7Songs"
     song: 
-      previous: &7Vorheriges Lied
-      current: &7Momentan ausgewählt
-      next: &7Nächstes Lied
-      remove: &7Song von Playlist entfernen
-      currently-playing: &aDieses Lied spielt gerade
-      add: &7Song zur Playlist hinzufügen
-    not-running: &cDeine Station läuft momentan nicht
-    play-mode: §7Spielt %mode% §7den Liedern in der Playlist
-      whitelist: §8alle von
-      blacklist: §8alle außer
-    running: &cDu kannst das nicht tun während die Station läuft
-    rename: &7Station umbenennen
-    start: &aStation starten
-    drop-here: &7Lege dein Item hier ab
-    skip-song: &7Nächstes Lied
-    stop: &cStation stoppen
-    back: &cZurück
+      previous: "&7Vorheriges Lied"
+      current: "&7Momentan ausgewählt"
+      next: "&7Nächstes Lied"
+      remove: "&7Song von Playlist entfernen"
+      currently-playing: "&aDieses Lied spielt gerade"
+      add: "&7Song zur Playlist hinzufügen"
+    not-running: "&cDeine Station läuft momentan nicht"
+    play-mode: 
+      message: "§7Spielt %mode% §7den Liedern in der Playlist"
+      whitelist: "§8alle von"
+      blacklist: "§8alle außer"
+    running: "&cDu kannst das nicht tun während die Station läuft"
+    rename: "&7Station umbenennen"
+    start: "&aStation starten"
+    drop-here: "&7Lege dein Item hier ab"
+    skip-song: "&7Nächstes Lied"
+    stop: "&cStation stoppen"
+    back: "&cZurück"
     loop: 
-      enabled: &aDauerschleife aktiviert
-      disabled: &cDauerschleife deaktiviert
-    playlist-empty: &cDie Playlist deiner Station ist leer
-    delete: &cStation löschen
-  song-doesnt-exist: %prefix% §cThat song doesn't exist
-  track-skipped: %prefix% &aLied übersprungen
-  playlist: %prefix% &7Playlist der Station "%station-name%" (%station-id%) (Dauerschleife: %loop%):
-  rename: %prefix% &7Bitte gebe einen neuen Namen für deine Station ein:
-  playlist-entry-playing: &6%index%: &a%song-name% (Song ID: %song-id%)
-  too-many-stations: %prefix% &cDu kannst nicht mehr als %max-stations% Stationen besitzen.
-  started: %prefix% §aStation started
-  not-your-station: %prefix% &cDu besitzt diese Station nicht
-  stopped: %prefix% §cStation stopped
-  deleted: %prefix% &aDie Station &7%station-name% (%station-id%) &awurde gelöscht
-  cannot-modify: %prefix% &cDu kannst die Station nicht bearbeiten während die Playlist abspielt
-  song-added: %prefix% §aSong added to playlist
-  song-removed: %prefix% &aLied von der Playlist entfernt
+      enabled: "&aDauerschleife aktiviert"
+      disabled: "&cDauerschleife deaktiviert"
+    playlist-empty: "&cDie Playlist deiner Station ist leer"
+    delete: "&cStation löschen"
+  song-doesnt-exist: "%prefix% §cThat song doesn't exist"
+  track-skipped: "%prefix% &aLied übersprungen"
+  playlist: "%prefix% &7Playlist der Station \"%station-name%\" (%station-id%) (Dauerschleife: %loop%):"
+  rename: "%prefix% &7Bitte gebe einen neuen Namen für deine Station ein:"
+  playlist-entry-playing: "&6%index%: &a%song-name% (Song ID: %song-id%)"
+  too-many-stations: "%prefix% &cDu kannst nicht mehr als %max-stations% Stationen besitzen."
+  started: "%prefix% §aStation started"
+  not-your-station: "%prefix% &cDu besitzt diese Station nicht"
+  stopped: "%prefix% §cStation stopped"
+  deleted: "%prefix% &aDie Station &7%station-name% (%station-id%) &awurde gelöscht"
+  cannot-modify: "%prefix% &cDu kannst die Station nicht bearbeiten während die Playlist abspielt"
+  song-added: "%prefix% §aSong added to playlist"
+  song-removed: "%prefix% &aLied von der Playlist entfernt"
   set: 
     loop: 
-      enable: %prefix% &aDauerschleife aktiviert
-      disable: %prefix% &cDauerschleife deaktiviert
-    name: %prefix% &aDeine Station wurde von &7%old-name% &ain &7%new-name%&a umbenannt
-  not-running: %prefix% &cDeine Station läuft momentan nicht
-  name-too-long: %prefix% &cDer Stationsname darf nicht mehr als %max-name-length% Zeichen enthalten
-  rename-cancelled: %prefix% &cZeit zum umbenennen abgelaufen. Bitte gebe den Namen nächstes mal etwas schneller ein
-  doesnt-exist: %prefix% &cDie Station existiert nicht
-  playlist-empty: %prefix% &7Die Playlist der Station "%station-name%" (%station-id%) beinhaltet keine Songs
-  already-running: %prefix% &cDeine Station läuft bereits
-  song-not-on-playlist: %prefix% &cDas angegebene Lied befindet sich nicht auf der Playlist
-  rename-not-allowed: %prefix% §cRenaming stations is not allowed
-  playlist-entry: &6%index%: &7%song-name% (Song ID: %song-id%)
+      enable: "%prefix% &aDauerschleife aktiviert"
+      disable: "%prefix% &cDauerschleife deaktiviert"
+    name: "%prefix% &aDeine Station wurde von &7%old-name% &ain &7%new-name%&a umbenannt"
+  not-running: "%prefix% &cDeine Station läuft momentan nicht"
+  name-too-long: "%prefix% &cDer Stationsname darf nicht mehr als %max-name-length% Zeichen enthalten"
+  rename-cancelled: "%prefix% &cZeit zum umbenennen abgelaufen. Bitte gebe den Namen nächstes mal etwas schneller ein"
+  doesnt-exist: "%prefix% &cDie Station existiert nicht"
+  playlist-empty: "%prefix% &7Die Playlist der Station \"%station-name%\" (%station-id%) beinhaltet keine Songs"
+  already-running: "%prefix% &cDeine Station läuft bereits"
+  song-not-on-playlist: "%prefix% &cDas angegebene Lied befindet sich nicht auf der Playlist"
+  rename-not-allowed: "%prefix% §cRenaming stations is not allowed"
+  playlist-entry: "&6%index%: &7%song-name% (Song ID: %song-id%)"
 gui: 
-  your-stations: &7Deine Stationen
-  previous-page: &7Vorherige Seite
-  back: &cZurück
+  your-stations: "&7Deine Stationen"
+  previous-page: "&7Vorherige Seite"
+  back: "&cZurück"
   songs: 
-    sorting-by: &7Sortiert nach: %mode%
+    sorting-by: "&7Sortiert nach: %mode%"
     song: 
-      author: &8Original-Autor: &7%author%
-      by: &8Von: &7%maker%
-      id: &8Song ID: &7%id%
-    mode-alphabet: Alphabet
-    mode-id: ID
-    mode-author: Autor
+      author: "&8Original-Autor: &7%author%"
+      by: "&8Von: &7%maker%"
+      id: "&8Song ID: &7%id%"
+    mode-alphabet: "Alphabet"
+    mode-id: "ID"
+    mode-author: "Autor"
   about-station: 
-    online: &aMomentan online
-    playing: &7Spielt momentan: %song-name%
-    manage: &3Rechtsklick zum verwalten
-    offline: &cMomentan offline
-    listen-time: &7Zugehört seit: &3%time%
-    playing-nothing: Nichts
-    owner: &7Besitzer: &3%owner%
-    id: &7ID: &3%id%
-    playing-color: &3
-  stop-listening: &cAufhören zuzuhören
-  create-station: &aStation erstellen
-  next-page: &7Nächste Seite
-  all-stations: &7Alle Stationen
+    online: "&aMomentan online"
+    playing: "&7Spielt momentan: %song-name%"
+    manage: "&3Rechtsklick zum verwalten"
+    offline: "&cMomentan offline"
+    listen-time: "&7Zugehört seit: &3%time%"
+    playing-nothing: "Nichts"
+    owner: "&7Besitzer: &3%owner%"
+    id: "&7ID: &3%id%"
+    playing-color: "&3"
+  stop-listening: "&cAufhören zuzuhören"
+  create-station: "&aStation erstellen"
+  next-page: "&7Nächste Seite"
+  all-stations: "&7Alle Stationen"
 help: 
-  header: %prefix% &8| &7Hilfe &8| &7%topic%
-  pr-version: Zeigt dir die momentane Version von PlayerRadios und sucht nach einem Update (Falls es aktiviert ist)
-  layout: &7&l/%command%%args% &r&8- %description%
-  pr-station-skip: Ãœberspringt ein Lied in der aktuellen Playlist
-  pr-bugreport: Erstelle einen Bugreport
-  pr-station-start-stop: Startet/Stoppt eine Station
-  pr-station-playlist-add: Fügt ein Lied zur angegebenen Stationsplaylist hinzu
-  pr-submit: Lädt oder fügt ein Lied zur Server-Songliste hinzu
-  pr-playlist: Zeigt dir die Playlist der Aktuellen Station
-  invalid-topic: &7Es gibt keinen Hilfeeintrag über "%topic%"
-  pr-station-playlist: Zeigt dir die Playlist einer angebenen Station
-  pr-station-set: Verändert die Einstellung einer Station
-  pr-station-list: Zeigt dir alle deine Stationen
-  pr-station-create: Erstellt eine Station
-  pr-reload: Lädt PlayerRadios neu
-  pr-export: Exportiert ein Lied zum angegebenen Format/Exportiert die Liedeinstellungen
-  use-topic-stations: &7Nutze &7&l/pr help stations &r&7um Hilfe über Stationen zu erhalten
-  pr-search: Sucht nach einem Lied
-  pr: Öffnet das Stationen-Auswahlmenü
-  pr-help: Zeigt dir die Command Hilfe (über ein spezielles Thema)
-  pr-station-delete: Löscht eine Station
-  pr-station-playlist-remove: Löscht ein Lied aus der angegebenen Stationsplaylist
-  pr-station: Öffnet das Stationsmanagement-GUI
+  header: "%prefix% &8| &7Hilfe &8| &7%topic%"
+  pr-version: "Zeigt dir die momentane Version von PlayerRadios und sucht nach einem Update (Falls es aktiviert ist)"
+  layout: "&7&l/%command%%args% &r&8- %description%"
+  pr-station-skip: "Überspringt ein Lied in der aktuellen Playlist"
+  pr-bugreport: "Erstelle einen Bugreport"
+  pr-station-start-stop: "Startet/Stoppt eine Station"
+  pr-station-playlist-add: "Fügt ein Lied zur angegebenen Stationsplaylist hinzu"
+  pr-submit: "Lädt oder fügt ein Lied zur Server-Songliste hinzu"
+  pr-playlist: "Zeigt dir die Playlist der Aktuellen Station"
+  invalid-topic: "&7Es gibt keinen Hilfeeintrag über \"%topic%\""
+  pr-station-playlist: "Zeigt dir die Playlist einer angebenen Station"
+  pr-station-set: "Verändert die Einstellung einer Station"
+  pr-station-list: "Zeigt dir alle deine Stationen"
+  pr-station-create: "Erstellt eine Station"
+  pr-reload: "Lädt PlayerRadios neu"
+  pr-export: "Exportiert ein Lied zum angegebenen Format/Exportiert die Liedeinstellungen"
+  use-topic-stations: "&7Nutze &7&l/pr help stations &r&7um Hilfe über Stationen zu erhalten"
+  pr-search: "Sucht nach einem Lied"
+  pr: "Öffnet das Stationen-Auswahlmenü"
+  pr-help: "Zeigt dir die Command Hilfe (über ein spezielles Thema)"
+  pr-station-delete: "Löscht eine Station"
+  pr-station-playlist-remove: "Löscht ein Lied aus der angegebenen Stationsplaylist"
+  pr-station: "Öffnet das Stationsmanagement-GUI"
 submit: 
-  downloading: %prefix% &6Datei wird heruntergeladen...
-  invalid-url: %prefix% &cUngültige URL
-  success: %prefix% &7%count% &aSong(s) wurden importiert (Format &7%format%&a erkannt)
-  reading: %prefix% &6Song(s) werden ausgelesen...
-  invalid-file: %prefix% &cDie Datei, die du importieren willst ist keine gültige Musikdatei (NBS, SNG, RSNG)
-  file-too-big: %prefix% &cDatei zu groÃŸ
-station-broadcast: %prefix% &8[&7%station-name%&8]: &7%message%
+  downloading: "%prefix% &6Datei wird heruntergeladen..."
+  invalid-url: "%prefix% &cUngültige URL"
+  success: "%prefix% &7%count% &aSong(s) wurden importiert (Format &7%format%&a erkannt)"
+  reading: "%prefix% &6Song(s) werden ausgelesen..."
+  invalid-file: "%prefix% &cDie Datei, die du importieren willst ist keine gültige Musikdatei (NBS, SNG, RSNG)"
+  file-too-big: "%prefix% &cDatei zu groß"
+station-broadcast: "%prefix% &8[&7%station-name%&8]: &7%message%"
 export: 
-  done: %prefix% &aExportiert als &7%file-name%
-  wait: %prefix% &7%song-name% &6wird exportiert...
-  not-available: %prefix% &6Export als SNG-Archiv ist nicht für einzelne Songs verfügbar
-  already-running: &cEs wird bereits ein Exportprozess ausgeführt. Bitte warte bis der Prozess abgeschlossen wurde
-  wait-all: %prefix% &7%count% &6Song(s) werden exportiert...
-  done-all: %prefix% &7%count% &aSong(s) (&7%failed% &afehlgeschlagen) wurden in &7%time%s &aexportiert
-  failed: %prefix% &cExport fehlgeschlagen. Bitte gucke in die Konsole für mehr Infos
+  done: "%prefix% &aExportiert als &7%file-name%"
+  wait: "%prefix% &7%song-name% &6wird exportiert..."
+  not-available: "%prefix% &6Export als SNG-Archiv ist nicht für einzelne Songs verfügbar"
+  already-running: "&cEs wird bereits ein Exportprozess ausgeführt. Bitte warte bis der Prozess abgeschlossen wurde"
+  wait-all: "%prefix% &7%count% &6Song(s) werden exportiert..."
+  done-all: "%prefix% &7%count% &aSong(s) (&7%failed% &afehlgeschlagen) wurden in &7%time%s &aexportiert"
+  failed: "%prefix% &cExport fehlgeschlagen. Bitte gucke in die Konsole für mehr Infos"
 placeholderapi: 
   listening: 
     song: 
-      none: None
-      format: %original-author% - %song-name% (von %author%) | %song-id%
+      none: "Keiner"
+      format: "%original-author% - %song-name% (von %author%) | %song-id%"
     station: 
-      none: Keine
+      none: "Keine"
       owner: 
-        none: -
+        none: "-"
     time: 
-      none: -
-stations: %prefix% &7Deine Stationen
-stopped-listening: %prefix% &cDu hörst dir nun keine Station mehr an
-world-blacklisted: %prefix% &cPlayerRadios ist in dieser Welt deaktiviert
-not-broadcasting: %prefix% &cDie Station &7%station-name% &cist momentan offline
-song-changed: %prefix% &8[&7%station-name%&8]: &aSpielt jetzt: &7%song-name%
-process-already-running: &cEs ist bereits ein Prozess am laufen. Bitte warte bis dieser fertig ist
-time-format: s,min,h
-commands-disabled: %prefix% &cPlayerRadios-Commands sind deaktiviert. Verwende das GUI über /pr
-not-listening: %prefix% &cDu hörst dir momentan keine Station an
-search-results: %prefix% &7Die besten Suchergebnisse:
-search-results-entry: &8%song-id%: &7%song-author% - %song-name% (von: %song-by%)
+      none: "-"
+stations: "%prefix% &7Deine Stationen"
+stopped-listening: "%prefix% &cDu hörst dir nun keine Station mehr an"
+world-blacklisted: "%prefix% &cPlayerRadios ist in dieser Welt deaktiviert"
+not-broadcasting: "%prefix% &cDie Station &7%station-name% &cist momentan offline"
+song-changed: "%prefix% &8[&7%station-name%&8]: &aSpielt jetzt: &7%song-name%"
+process-already-running: "&cEs ist bereits ein Prozess am laufen. Bitte warte bis dieser fertig ist"
+time-format: "s,min,h"
+commands-disabled: "%prefix% &cPlayerRadios-Commands sind deaktiviert. Verwende das GUI über /pr"
+not-listening: "%prefix% &cDu hörst dir momentan keine Station an"
+search-results: "%prefix% &7Die besten Suchergebnisse:"
+search-results-entry: "&8%song-id%: &7%song-author% - %song-name% (von: %song-by%)"
 bugreport: 
-  success: %prefix% &aBugreport erstellt: &7%link%&a. Sende mir eine private Nachricht über &7https://www.spigotmc.org/conversations/add?to=MrLetsplay &amit diesem Link und dem Bug, den du gefunden hast
-stations-entry: &8%station-id%: &7%station-name%
-search-results-empty: &cKeine Ergebnisse gefunden
-stopped-broadcasting: %prefix% &cDie Station &7%station-name% &cist offline gegangen
-still-loading: %prefix% &cPlayerRadios lädt noch
-stations-empty: %prefix% &7Du besitzt keine Station
-reload-complete: %prefix% &aReload abgeschlossen
-creation-disabled: %prefix% &cDas erstellen von Stationen ist derzeit deaktiviert
+  success: "%prefix% &aBugreport erstellt: &7%link%&a. Sende mir eine private Nachricht über &7https://www.spigotmc.org/conversations/add?to=MrLetsplay &amit diesem Link und dem Bug, den du gefunden hast"
+stations-entry: "&8%station-id%: &7%station-name%"
+search-results-empty: "&cKeine Ergebnisse gefunden"
+stopped-broadcasting: "%prefix% &cDie Station &7%station-name% &cist offline gegangen"
+still-loading: "%prefix% &cPlayerRadios lädt noch"
+stations-empty: "%prefix% &7Du besitzt keine Station"
+reload-complete: "%prefix% &aReload abgeschlossen"
+creation-disabled: "%prefix% &cDas erstellen von Stationen ist derzeit deaktiviert"
 station-created: 
-  1: %prefix% &aDeine Station (Station &7%id%&a) wurde erstellt
-  2: %prefix% &6Nutze &7/pr station %id% &6um deine Station zu verwalten
-station-changed: %prefix% &aDu hörst dir nun &7"%station-name%" &aan
+  1: "%prefix% &aDeine Station (Station &7%id%&a) wurde erstellt"
+  2: "%prefix% &6Nutze &7/pr station %id% &6um deine Station zu verwalten"
+station-changed: "%prefix% &aDu hörst dir nun &7\"%station-name%\" &aan"
