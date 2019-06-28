@@ -76,6 +76,13 @@ public class Main extends JavaPlugin {
 					}
 				}
 			}
+			try {
+				System.out.println(PasteText.glotSnippet(
+						"test.txt", "this is test.txt",
+						"test2.txt", "this is another file"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			getLogger().info("Current version: "+PLUGIN_VERSION+", Newest version: "+res.updVer);
 			if(res.updAvailable) {
 				getLogger().info("----------------------------------------------");
@@ -274,10 +281,10 @@ public class Main extends JavaPlugin {
 								try {
 									List<String> config = Files.readAllLines(Config.config.getConfigFile().toPath());
 									List<String> stations = Files.readAllLines(StationManager.stationFile.toPath());
-									p.sendMessage(Config.getMessage("bugreport.success", "link", PasteText.hastebin_Safe(
-											"------------------CONFIG------------------\n\n\n"+
-											config.stream().collect(Collectors.joining("\n"))+
-											"\n\n\n------------------STATIONS FILE------------------\n\n\n"+
+									p.sendMessage(Config.getMessage("bugreport.success", "link", PasteText.glotSafe(
+											"config.yml",
+											config.stream().collect(Collectors.joining("\n")),
+											"stations.yml",
 											stations.stream().collect(Collectors.joining("\n")))));
 								} catch (IOException e) {
 									e.printStackTrace();

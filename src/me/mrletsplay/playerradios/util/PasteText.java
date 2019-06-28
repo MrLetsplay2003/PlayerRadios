@@ -1,63 +1,41 @@
 package me.mrletsplay.playerradios.util;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
+import me.mrletsplay.mrcore.http.HttpGeneric;
+import me.mrletsplay.mrcore.http.HttpRequest;
+import me.mrletsplay.mrcore.json.JSONArray;
 import me.mrletsplay.mrcore.json.JSONObject;
 
 public class PasteText {
 	
-	public static String hastebin(String text) throws IOException, ParseException {
-		return hastebin(text, "txt");
-	}
-	
-	public static String hastebin(String text, String format) throws IOException, ParseException {
-		JSONObject o = new JSONObject(httpPost(new URL("https://hastebin.com/documents"), text));
-		return "https://hastebin.com/"+o.get("key")+(format!=null?"."+format:"");
-	}
-	
-	public static String hastebin_Safe(String text, String format) {
+	public static String glotSafe(String... files) {
 		try {
-			return hastebin(text, format);
-		} catch (IOException | ParseException e) {
+			return glotSnippet(files);
+		} catch (IOException e) {
 			return null;
 		}
 	}
 	
-	public static String hastebin_Safe(String text) {
-		try {
-			return hastebin(text);
-		} catch (IOException | ParseException e) {
-			return null;
+	public static String glotSnippet(String... files) throws IOException {
+		if(files.length % 2 != 0) throw new IllegalArgumentException();
+		JSONObject o = new JSONObject();
+		o.put("language", "plaintext");
+		o.put("title", "bugreport");
+		o.put("public", false);
+		JSONArray fa = new JSONArray();
+		for(int i = 0; i < files.length; i += 2) {
+			JSONObject f = new JSONObject();
+			f.put("name", files[i]);
+			f.put("content", files[i + 1]);
+			fa.add(f);
 		}
+		o.put("files", fa);
+		HttpGeneric p = HttpRequest.createGeneric("POST", "https://snippets.glot.io/snippets");
+		p.setHeaderParameter("Content-Type", "application/json");
+		p.setContent(o.toString().getBytes(StandardCharsets.UTF_8));
+		return "https://glot.io/snippets/" + p.execute().asJSONObject().getString("id");
 	}
 	
-	public static String httpPost(URL url, String... params) throws IOException {
-		String urlParameters = Arrays.stream(params).collect(Collectors.joining("&"));
-		byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-		int postDataLength = postData.length;
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();           
-		conn.setDoOutput(true);
-		conn.setInstanceFollowRedirects(false);
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
-		conn.setRequestProperty("charset", "utf-8");
-		conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-		conn.setUseCaches(false);
-		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-		wr.write(postData);
-		InputStream in = conn.getInputStream();
-		byte[] dat = new byte[1024];
-		in.read(dat);
-		return new String(dat).trim();
-	}
-
 }
