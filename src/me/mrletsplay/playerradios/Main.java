@@ -76,13 +76,6 @@ public class Main extends JavaPlugin {
 					}
 				}
 			}
-			try {
-				System.out.println(PasteText.glotSnippet(
-						"test.txt", "this is test.txt",
-						"test2.txt", "this is another file"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			getLogger().info("Current version: "+PLUGIN_VERSION+", Newest version: "+res.updVer);
 			if(res.updAvailable) {
 				getLogger().info("----------------------------------------------");
