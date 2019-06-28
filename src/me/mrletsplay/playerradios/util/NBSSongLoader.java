@@ -16,6 +16,8 @@ public class NBSSongLoader {
 
 	//Reference to original: https://github.com/xxmicloxx/NoteBlockAPI/blob/master/src/main/java/com/xxmicloxx/NoteBlockAPI/NBSDecoder.java
 	
+	private static final int MAX_STRING_LENGTH = 1024;
+	
 	public static Song loadSong(File fIn) throws Exception {
 		DataInputStream in = new DataInputStream(new FileInputStream(fIn));
 		try {
@@ -108,7 +110,6 @@ public class NBSSongLoader {
 					layers.put(i, l);
 				}
 			}catch(Exception e) {
-				//Main.pl.getLogger().info("Failed to load layer names/volumes of \""+title+"\" ("+fIn.getName()+"), ignoring...");
 				for(int i = 0; i< songHeight; i++) {
 					Layer l = layers.get(i);
 					if(l!=null) {
@@ -217,6 +218,7 @@ public class NBSSongLoader {
 
 	private static String readString(DataInputStream dis) throws IOException {
 		int length = readInt(dis);
+		if(length > MAX_STRING_LENGTH) throw new IllegalArgumentException("Invalid string length"); // Prevent heap overflow
 		StringBuilder sb = new StringBuilder(length);
 		for (; length > 0; --length) {
 			char c = (char) dis.readByte();

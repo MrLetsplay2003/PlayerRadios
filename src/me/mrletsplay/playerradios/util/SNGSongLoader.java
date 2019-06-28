@@ -227,18 +227,4 @@ public class SNGSongLoader {
 		}
 	}
 	
-//	private static void writeString(DataOutputStream out, String s) throws Exception {
-//		out.writeShort(s.getBytes().length);
-//		out.write(s.getBytes());
-//	}
-	
-//	private static String readString(DataInputStream in) throws Exception {
-//		short length = in.readShort();
-//		StringBuilder sb = new StringBuilder();
-//		for(int i = 0; i < length; i++) {
-//			sb.append((char)in.readUnsignedByte());
-//		}
-//		return sb.toString();
-//	}
-	
 }
