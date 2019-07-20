@@ -1,20 +1,20 @@
-package me.mrletsplay.playerradios.util;
+package me.mrletsplay.playerradios.util.song;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Song {
 
-	private HashMap<Integer, Layer> layers;
+	private Map<Integer, Layer> layers;
 	private int length, ID, height;
 	private float tps;
 	private String name, author, originalAuthor;
-	private HashMap<String, String> customSounds;
+	private Map<String, String> customSounds;
 	private File songFile;
 	
-	public Song(int id, int length, int height, String name, HashMap<Integer, Layer> layers, float tps, String author, String originalAuthor, HashMap<String, String> customSounds, File songFile) {
+	public Song(int id, int length, int height, String name, Map<Integer, Layer> layers, float tps, String author, String originalAuthor, Map<String, String> customSounds, File songFile) {
 		this.ID = id;
 		this.length = length;
 		this.height = height;
@@ -59,7 +59,7 @@ public class Song {
 		return originalAuthor;
 	}
 	
-	public HashMap<Integer, Layer> getLayers() {
+	public Map<Integer, Layer> getLayers() {
 		return layers;
 	}
 	
@@ -106,7 +106,7 @@ public class Song {
 		return notes;
 	}
 	
-	public HashMap<String, String> getCustomSounds() {
+	public Map<String, String> getCustomSounds() {
 		return customSounds;
 	}
 	

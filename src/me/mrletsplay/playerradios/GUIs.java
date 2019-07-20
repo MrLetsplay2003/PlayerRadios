@@ -33,9 +33,9 @@ import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedMaterial;
 import me.mrletsplay.mrcore.misc.StringUtils;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
-import me.mrletsplay.playerradios.util.Song;
 import me.mrletsplay.playerradios.util.SongManager;
 import me.mrletsplay.playerradios.util.Tools;
+import me.mrletsplay.playerradios.util.song.Song;
 
 public class GUIs {
 	
@@ -607,7 +607,7 @@ public class GUIs {
 			@Override
 			public List<Song> getItems(GUIBuildEvent event) {
 				String sortBy = (String) event.getGUIHolder().getProperty(Main.pl, "sort_by");
-				List<Song> aSongs = new ArrayList<>(SongManager.songs);
+				List<Song> aSongs = new ArrayList<>(SongManager.getSongs());
 				if(sortBy.equalsIgnoreCase("alphabet")) {
 					aSongs.sort(new Comparator<Song>() {
 						@Override

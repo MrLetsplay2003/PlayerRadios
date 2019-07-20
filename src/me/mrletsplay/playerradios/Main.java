@@ -28,11 +28,11 @@ import me.mrletsplay.playerradios.util.RSNGSongLoader;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
 import me.mrletsplay.playerradios.util.SNGSongLoader;
-import me.mrletsplay.playerradios.util.Song;
 import me.mrletsplay.playerradios.util.SongManager;
 import me.mrletsplay.playerradios.util.Tools;
 import me.mrletsplay.playerradios.util.UpdateChecker;
 import me.mrletsplay.playerradios.util.UpdateChecker.Result;
+import me.mrletsplay.playerradios.util.song.Song;
 
 public class Main extends JavaPlugin {
 	
@@ -154,7 +154,7 @@ public class Main extends JavaPlugin {
 		}
 		Metrics m = new Metrics(this);
 		m.addCustomChart(new Metrics.SimplePie("use_uuids", () -> String.valueOf(Config.use_uuids)));
-		m.addCustomChart(new Metrics.SingleLineChart("song_count", SongManager.songs::size));
+		m.addCustomChart(new Metrics.SingleLineChart("song_count", SongManager.getSongs()::size));
 		getLogger().info("Enabled PlayerRadios v"+PLUGIN_VERSION);
 	}
 	
@@ -334,7 +334,7 @@ public class Main extends JavaPlugin {
 												if(ss!=null) {
 													for(Song s : ss.songs) {
 														s.setID(-1);
-														SongManager.songs.add(s);
+														SongManager.getSongs().add(s);
 													}
 													SongManager.registerNewSongs();
 													p.sendMessage(Config.getMessage("submit.success").replace("%count%", ss.songs.size()+"").replace("%format%", ss.format));
@@ -368,7 +368,7 @@ public class Main extends JavaPlugin {
 								}
 								name = name.substring(0, name.length()-1);
 								final String term = name.toLowerCase();
-								List<Song> ss = new ArrayList<>(SongManager.songs);
+								List<Song> ss = new ArrayList<>(SongManager.getSongs());
 								ss.sort(new Comparator<Song>() {
 									@Override
 									public int compare(Song o1, Song o2) {
@@ -425,17 +425,17 @@ public class Main extends JavaPlugin {
 									if(args[1].equalsIgnoreCase("all")) {
 										if(p.hasPermission(Config.PERM_EXPORT_ALL)) {
 											if(!exportRunning) {
-												p.sendMessage(Config.getMessage("export.wait-all").replace("%count%", ""+SongManager.songs.size()));
+												p.sendMessage(Config.getMessage("export.wait-all").replace("%count%", ""+SongManager.getSongs().size()));
 												long t = System.currentTimeMillis();
 												exportRunning = true;
-												if(SongManager.songs.size()>=Config.thread_on_process_when) {
+												if(SongManager.getSongs().size()>=Config.thread_on_process_when) {
 													tempProcessThread = new Thread(new Runnable() {
 														
 														@Override
 														public void run() {
 															int c = saveAllSongs(eMode, true);
 															exportRunning = false;
-															p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.songs.size()-c)));
+															p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.getSongs().size()-c)));
 															tempProcessThread = null;
 														}
 													});
@@ -443,7 +443,7 @@ public class Main extends JavaPlugin {
 												}else {
 													int c = saveAllSongs(eMode, false);
 													exportRunning = false;
-													p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.songs.size()-c)));
+													p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.getSongs().size()-c)));
 												}
 											}else {
 												p.sendMessage(Config.getMessage("process-already-running"));
@@ -747,7 +747,7 @@ public class Main extends JavaPlugin {
 	private int saveAllSongs(String format, boolean checkInterrupt) {
 		int c = 0;
 		if(format.equalsIgnoreCase("rsng")) {
-			for(Song s : SongManager.songs) {
+			for(Song s : SongManager.getSongs()) {
 				if(checkInterrupt && Thread.interrupted()) return c;
 				try {
 					RSNGSongLoader.saveSong(s);
@@ -757,7 +757,7 @@ public class Main extends JavaPlugin {
 				}
 			}
 		}else if(format.equalsIgnoreCase("nbs")) {
-			for(Song s : SongManager.songs) {
+			for(Song s : SongManager.getSongs()) {
 				if(checkInterrupt && Thread.interrupted()) return c;
 				try {
 					NBSSongLoader.saveSong(s);
@@ -767,7 +767,7 @@ public class Main extends JavaPlugin {
 				}
 			}
 		}else if(format.equalsIgnoreCase("sng")){
-			for(Song s : SongManager.songs) {
+			for(Song s : SongManager.getSongs()) {
 				if(checkInterrupt && Thread.interrupted()) return c;
 				try {
 					SNGSongLoader.saveSong_Export(s);
@@ -778,13 +778,13 @@ public class Main extends JavaPlugin {
 			}
 		}else if(format.equals("sng-archive")) {
 			try {
-				SNGSongLoader.saveSongs_Export(SongManager.songs.toArray(new Song[SongManager.songs.size()]));
-				c = SongManager.songs.size();
+				SNGSongLoader.saveSongs_Export(SongManager.getSongs().toArray(new Song[SongManager.getSongs().size()]));
+				c = SongManager.getSongs().size();
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
 		}else if(format.equals("settings")) {
-			for(Song s : SongManager.songs) {
+			for(Song s : SongManager.getSongs()) {
 				SongManager.setDefaultSongSettings(s);
 				c++;
 			}

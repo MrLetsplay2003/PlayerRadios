@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderHook;
 import me.mrletsplay.playerradios.Config;
+import me.mrletsplay.playerradios.util.song.Song;
 
 public class PlayerRadiosPlaceholder extends PlaceholderHook {
 

@@ -12,6 +12,9 @@ import java.util.List;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.playerradios.Main;
+import me.mrletsplay.playerradios.util.song.Layer;
+import me.mrletsplay.playerradios.util.song.Note;
+import me.mrletsplay.playerradios.util.song.Song;
 
 public class SNGSongLoader {
 	

@@ -1,4 +1,4 @@
-package me.mrletsplay.playerradios.util;
+package me.mrletsplay.playerradios.util.song;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 

@@ -2,6 +2,8 @@ package me.mrletsplay.playerradios.util;
 
 import java.util.List;
 
+import me.mrletsplay.playerradios.util.song.Song;
+
 public class ImportResult {
 
 	public String format;

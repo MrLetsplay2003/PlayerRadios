@@ -16,6 +16,10 @@ import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
+import me.mrletsplay.playerradios.util.song.Layer;
+import me.mrletsplay.playerradios.util.song.Note;
+import me.mrletsplay.playerradios.util.song.NotePitch;
+import me.mrletsplay.playerradios.util.song.Song;
 
 public class RadioStation {
 
@@ -308,7 +312,7 @@ public class RadioStation {
 		if(blacklistMode) {
 			currSong = null;
 			while(currSong==null || playlist.contains(currSong.getID())) {
-				currSong = SongManager.songs.get(Main.random.nextInt(SongManager.songs.size()));
+				currSong = SongManager.getSongs().get(Main.random.nextInt(SongManager.getSongs().size()));
 			}
 			for(Player p : players) {
 				p.sendMessage(Config.getMessage("song-changed").replace("%station-name%", name).replace("%song-name%", currSong.getName()));

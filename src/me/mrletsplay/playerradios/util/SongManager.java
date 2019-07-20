@@ -3,6 +3,7 @@ package me.mrletsplay.playerradios.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import me.mrletsplay.mrcore.config.ConfigLoader;
@@ -10,9 +11,15 @@ import me.mrletsplay.mrcore.config.CustomConfig;
 import me.mrletsplay.mrcore.config.FileCustomConfig;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.Main;
+import me.mrletsplay.playerradios.util.song.Song;
+import me.mrletsplay.playerradios.util.songloader.SongLoader;
 
 public class SongManager {
-	public static List<Song> songs;
+	
+	private static List<SongLoader> songLoaders = Arrays.asList(
+				new me.mrletsplay.playerradios.util.songloader.impl.NBSSongLoader()
+			);
+	private static List<Song> songs;
 	private static File sSets = new File(Main.pl.getDataFolder(),"/song-settings/");
 	
 	public static void init() {
@@ -20,10 +27,15 @@ public class SongManager {
 		nbs.mkdirs();
 		File sng_r = new File(Main.pl.getDataFolder(),"/import/rsng/");
 		sng_r.mkdirs();
-		File sng = new File(Main.pl.getDataFolder(),"/songs/");
+		File sng = new File(Main.pl.getDataFolder(), "/songs/");
 		sng.mkdirs();
 		File sngI = new File(Main.pl.getDataFolder(),"/import/sng/");
 		sngI.mkdirs();
+		
+		for(SongLoader l : songLoaders) {
+			l.getSongImportFolder().mkdirs();
+			l.getSongExportFolder().mkdirs();
+		}
 		
 		sSets.mkdirs();
 		
@@ -113,6 +125,10 @@ public class SongManager {
 			}
 		}
 		Main.pl.getLogger().info("Loaded "+songs.size()+" song(s) with "+sets+" song-setting files ("+nbsF+" NBS, "+rsngF+" RSNG, "+sngF+" SNG, "+sngFI+" imported SNG) ("+Tools.timeTaken(t, System.currentTimeMillis(), true)+"s)");
+	}
+	
+	public static List<Song> getSongs() {
+		return songs;
 	}
 	
 	private static boolean hasConfiguration(int songID) {

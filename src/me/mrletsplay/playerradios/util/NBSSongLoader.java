@@ -11,6 +11,9 @@ import java.util.HashMap;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.Main;
+import me.mrletsplay.playerradios.util.song.Layer;
+import me.mrletsplay.playerradios.util.song.Note;
+import me.mrletsplay.playerradios.util.song.Song;
 
 public class NBSSongLoader {
 
@@ -23,6 +26,7 @@ public class NBSSongLoader {
 		try {
 			HashMap<Integer, Layer> layers = new HashMap<>();
 			short length = readShort(in);
+//			if(length)
 			short songHeight = readShort(in);
 			String title = readString(in);
 			if(title.equals("")) {
@@ -218,7 +222,7 @@ public class NBSSongLoader {
 
 	private static String readString(DataInputStream dis) throws IOException {
 		int length = readInt(dis);
-		if(length > MAX_STRING_LENGTH) throw new IllegalArgumentException("Invalid string length"); // Prevent heap overflow
+		if(length > MAX_STRING_LENGTH) throw new IllegalArgumentException("Invalid string length: " + length); // Prevent heap overflow
 		StringBuilder sb = new StringBuilder(length);
 		for (; length > 0; --length) {
 			char c = (char) dis.readByte();
