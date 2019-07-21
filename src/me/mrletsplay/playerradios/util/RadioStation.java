@@ -280,15 +280,13 @@ public class RadioStation {
 				if(n!=null) {
 					Layer layer = currSong.getLayers().get(l);
 					int vol = layer.getVolume();
-					if(n.getVolume()>0) {
-						vol = n.getVolume();
-					}
+					if(n.getVolume() > 0) vol = n.getVolume();
 					if((!n.isCustom() && n.getSound()!=null) || (n.isCustom() && n.getCustomSound()!=null)) {
 						for(Player p : players) {
 							if(!n.isCustom()) {
-								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getSound().getBukkitSound(), vol, NotePitch.getPitch(n.getNote()));
+								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getSound().getBukkitSound(), vol / 10f, NotePitch.getPitch(n.getNote()));
 							}else {
-								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getCustomSound(), vol, NotePitch.getPitch(n.getNote()));
+								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getCustomSound(), vol / 10f, NotePitch.getPitch(n.getNote()));
 							}
 							if(Config.enable_particles) {
 								if(NMSVersion.getCurrentServerVersion().isOlderThan(NMSVersion.V1_13_R1)) {
@@ -311,6 +309,10 @@ public class RadioStation {
 		tick = 0;
 		if(blacklistMode) {
 			currSong = null;
+			if(SongManager.getSongs().stream().allMatch(s -> playlist.contains(s.getID()))) {
+				stop();
+				return false;
+			}
 			while(currSong==null || playlist.contains(currSong.getID())) {
 				currSong = SongManager.getSongs().get(Main.random.nextInt(SongManager.getSongs().size()));
 			}

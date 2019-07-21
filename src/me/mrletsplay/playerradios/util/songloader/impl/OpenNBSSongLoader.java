@@ -19,10 +19,15 @@ import me.mrletsplay.playerradios.util.songloader.LittleEndianInputStream;
 import me.mrletsplay.playerradios.util.songloader.LittleEndianOutputStream;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
 
-public class NBSSongLoader implements SongLoader {
+public class OpenNBSSongLoader implements SongLoader {
 
 	@Override
 	public String getName() {
+		return "opennbs";
+	}
+	
+	@Override
+	public String getFileExtension() {
 		return "nbs";
 	}
 
@@ -30,8 +35,12 @@ public class NBSSongLoader implements SongLoader {
 	public List<Song> loadSongs(File file) throws IOException {
 		try (LittleEndianInputStream dIn = new LittleEndianInputStream(new FileInputStream(file))) {
 			HashMap<Integer, Layer> layers = new HashMap<>();
-			short length = dIn.readLEShort();
-			if(length == 0) throw new IllegalArgumentException("Song length is 0, file is probably an opennbs file");
+			int length = 0;
+			short fTB = dIn.readLEShort();
+			if(fTB != 0) throw new IllegalArgumentException("File is not an opennbs file (maybe it's a normal nbs file)");
+			byte nbsV = dIn.readByte();
+			if(nbsV > 2) throw new IllegalArgumentException("Invalid/Unsupported opennbs version: " + nbsV);
+			dIn.readByte(); // First custom instrument index
 			short songHeight = dIn.readLEShort();
 			for(int i = 0; i < songHeight; i++) {
 				layers.put(i, new Layer());
@@ -73,9 +82,7 @@ public class NBSSongLoader implements SongLoader {
 					break;
 				}
 				tick += jTicks;
-				if (tick > length) {
-					length = tick;
-				}
+				length = Math.max(length, tick);
 				short layer = -1;
 				while (true) {
 					short jLayers = dIn.readLEShort();
@@ -83,9 +90,7 @@ public class NBSSongLoader implements SongLoader {
 						break;
 					}
 					layer += jLayers;
-					if (layer > songHeight) {
-						songHeight = layer;
-					}
+					songHeight = (short) Math.max(songHeight, layer);
 					byte instrument = dIn.readByte();
 					byte note = dIn.readByte();
 					Layer l = layers.get((int) layer);
@@ -105,19 +110,22 @@ public class NBSSongLoader implements SongLoader {
 					l.setNote(tick, new Note(s, p));
 				}
 			}
-			if (tick > length) { // Should never be the case
-				length = tick;
-			}
 			try {
 				for (int i = 0; i < songHeight; i++) {
 					Layer l = layers.get(i);
 					dIn.readLEString(); // Layer name
 					l.setVolume(dIn.readByte());
+					if(nbsV >= 2) {
+						l.setStereo(dIn.readByte()); // Layer Stereo
+					}else {
+						l.setStereo(100);
+					}
 				}
 			} catch (Exception e) {
 				for (int i = 0; i < songHeight; i++) {
 					Layer l = layers.get(i);
 					l.setVolume(100);
+					l.setStereo(100);
 				}
 			}
 			// Custom instruments are ignored
@@ -133,7 +141,9 @@ public class NBSSongLoader implements SongLoader {
 		Song song = songs[0];
 		IOUtils.createFile(file);
 		try (LittleEndianOutputStream dO = new LittleEndianOutputStream(new FileOutputStream(file))) {
-			dO.writeLEShort((short) song.getLength());
+			dO.writeLEShort((short) 0); // opennbs identifier
+			dO.writeByte(2); // opennbs version
+			dO.writeByte(Tools.highestSoundID() + 1); // First custom instrument index
 			dO.writeLEShort((short) song.getHeight());
 			dO.writeLEString(song.getName());
 			String author = (song.getAuthor() != null ? song.getAuthor() : "");
@@ -179,9 +189,9 @@ public class NBSSongLoader implements SongLoader {
 				Layer l = song.getLayers().get(i);
 				dO.writeLEString(""); // Layer name
 				dO.write(l.getVolume());
+				dO.write(l.getStereo());
 			}
 			dO.write(0);
-			dO.close();
 		}
 	}
 	
@@ -189,5 +199,5 @@ public class NBSSongLoader implements SongLoader {
 	public boolean supportsSongArchives() {
 		return false;
 	}
-
+	
 }

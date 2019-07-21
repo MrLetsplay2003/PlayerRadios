@@ -21,18 +21,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 import me.mrletsplay.playerradios.util.ImportResult;
-import me.mrletsplay.playerradios.util.NBSSongLoader;
 import me.mrletsplay.playerradios.util.PasteText;
 import me.mrletsplay.playerradios.util.PlayerRadiosPlaceholder;
-import me.mrletsplay.playerradios.util.RSNGSongLoader;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
-import me.mrletsplay.playerradios.util.SNGSongLoader;
 import me.mrletsplay.playerradios.util.SongManager;
 import me.mrletsplay.playerradios.util.Tools;
 import me.mrletsplay.playerradios.util.UpdateChecker;
 import me.mrletsplay.playerradios.util.UpdateChecker.Result;
 import me.mrletsplay.playerradios.util.song.Song;
+import me.mrletsplay.playerradios.util.songloader.SongLoader;
 
 public class Main extends JavaPlugin {
 	
@@ -64,7 +62,7 @@ public class Main extends JavaPlugin {
 		PLUGIN_VERSION = getDescription().getVersion();
 		Config.init();
 		PlayerManager.init();
-		getLogger().info("Detected MC server version: " + NMSVersion.getCurrentServerVersion().getFriendlyName() + " (NMS version: " + NMSVersion.getCurrentServerVersion().getNMSName());
+		getLogger().info("Detected MC server version: " + NMSVersion.getCurrentServerVersion().getFriendlyName() + " (NMS version: " + NMSVersion.getCurrentServerVersion().getNMSName() + ")");
 		Bukkit.getPluginManager().registerEvents(new Events(), this);
 		if (Config.enable_update_check) {
 			getLogger().info("Checking for update...");
@@ -99,7 +97,7 @@ public class Main extends JavaPlugin {
 					getLogger().info("Importing songs using thread as there are "+count+" files to import");
 					init();
 				}
-			});
+			}, "PlayerRadios-Import-Thread");
 			t2.start();
 		}else {
 			init();
@@ -140,7 +138,7 @@ public class Main extends JavaPlugin {
 					}
 					Main.pl.getLogger().info("Thread ended successfully!");
 				}
-			});
+			}, "PlayerRadios-Ticker-Thread");
 			t.start();
 		}
 		if(Config.save_last_listened) {
@@ -351,7 +349,7 @@ public class Main extends JavaPlugin {
 										}
 										tempProcessThread = null;
 									}
-								});
+								},  "PlayerRadios-Process-Thread");
 								tempProcessThread.start();
 							}else {
 								sendCommandHelp(p, null);
@@ -418,7 +416,9 @@ public class Main extends JavaPlugin {
 							if(args.length==3) {
 								try {
 									String eMode = args[2];
-									if(!eMode.equalsIgnoreCase("rsng") && !eMode.equalsIgnoreCase("nbs") && !eMode.equalsIgnoreCase("sng") && !eMode.equalsIgnoreCase("sng-archive") && !eMode.equalsIgnoreCase("settings")) {
+									SongLoader l = SongManager.getSongLoader(eMode);
+									SongLoader aL = eMode.toLowerCase().endsWith("-archive") ? SongManager.getSongLoader(eMode.substring(0, eMode.length() - "-archive".length())) : null;
+									if(l == null && (aL == null || !aL.supportsSongArchives()) && !eMode.equalsIgnoreCase("settings")) {
 										sendCommandHelp(p, null);
 										return true;
 									}
@@ -438,7 +438,7 @@ public class Main extends JavaPlugin {
 															p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.getSongs().size()-c)));
 															tempProcessThread = null;
 														}
-													});
+													}, "PlayerRadios-Process-Thread");
 													tempProcessThread.start();
 												}else {
 													int c = saveAllSongs(eMode, false);
@@ -457,18 +457,19 @@ public class Main extends JavaPlugin {
 											return true;
 										}
 										Song s = SongManager.getSongByID(Integer.parseInt(args[1]));
+										if(s == null) {
+											p.sendMessage(Config.getMessage("export.invalid-song"));
+											return true;
+										}
 										try {
-											p.sendMessage(Config.getMessage("export.wait").replace("%song-name%", s.getName()));
+											p.sendMessage(Config.getMessage("export.wait", "song-name", s.getName()));
 											File f = null;
-											if(eMode.equalsIgnoreCase("rsng")) {
-												f = RSNGSongLoader.saveSong(s);
-											}else if(eMode.equalsIgnoreCase("nbs")) {
-												f = NBSSongLoader.saveSong(s);
-											}else if(eMode.equalsIgnoreCase("sng")){
-												f = SNGSongLoader.saveSong_Export(s);
-											}else if(eMode.equalsIgnoreCase("settings")) {
+											if(eMode.equalsIgnoreCase("settings")) {
 												f = SongManager.getConfigFile(s.getID());
 												SongManager.setDefaultSongSettings(s);
+											}else {
+												f = l.getSongExportFile(s);
+												l.saveSongs(f, s);
 											}
 											p.sendMessage(Config.getMessage("export.done").replace("%file-name%", f.getName()));
 										} catch (Exception e) {
@@ -518,8 +519,8 @@ public class Main extends JavaPlugin {
 								if (name.length() <= Config.max_station_name_length) {
 									if(StationManager.getRadioStationsByPlayer(p).size()<Config.max_stations_per_player) {
 										RadioStation r = StationManager.createStation(p, name);
-										p.sendMessage(Config.getMessage("station-created.1").replace("%id%", ""+r.getID()).replace("%station-name%", r.getName()));
-										p.sendMessage(Config.getMessage("station-created.2").replace("%id%", ""+r.getID()));
+										p.sendMessage(Config.getMessage("station-created.1", "id", ""+r.getID(), "station-name", r.getName()));
+										p.sendMessage(Config.getMessage("station-created.2", "id", ""+r.getID()));
 									}else {
 										p.sendMessage(Config.getMessage("station.too-many-stations"));
 									}
@@ -531,7 +532,7 @@ public class Main extends JavaPlugin {
 								List<RadioStation> ss = StationManager.getRadioStationsByPlayer(p);
 								if(!ss.isEmpty()) {
 									for(RadioStation r : ss) {
-										p.sendMessage(Config.getMessage("stations-entry").replace("%station-id%", ""+r.getID()).replace("%station-name%", r.getName()));
+										p.sendMessage(Config.getMessage("stations-entry", "station-id", ""+r.getID(), "station-name", r.getName()));
 									}
 								}else {
 									p.sendMessage(Config.getMessage("stations-empty"));
@@ -703,7 +704,7 @@ public class Main extends JavaPlugin {
 			if(!Config.disable_commands || !Config.disable_commands_all) {
 				sender.sendMessage(Config.getHelpMessage("pr-playlist", "pr playlist", ""));
 				if(sender.hasPermission(Config.PERM_EXPORT)) {
-					sender.sendMessage(Config.getHelpMessage("pr-export", "pr export", " <Song-ID"+(sender.hasPermission(Config.PERM_EXPORT_ALL)?"/all":"")+"> <nbs/sng/rsng/sng-archive/settings>"));
+					sender.sendMessage(Config.getHelpMessage("pr-export", "pr export", " <Song-ID"+(sender.hasPermission(Config.PERM_EXPORT_ALL)?"/all":"")+"> <nbs/sng/rsng/sng-archive/settings>")); // TODO
 				}
 				if((Config.enable_submit && (!Config.submit_needs_perm || sender.hasPermission(Config.PERM_SUBMIT))) || sender.hasPermission(Config.PERM_SUBMIT_WHEN_DISABLED)) {
 					sender.sendMessage(Config.getHelpMessage("pr-submit", "pr submit", " <Link>"));
@@ -746,47 +747,31 @@ public class Main extends JavaPlugin {
 	
 	private int saveAllSongs(String format, boolean checkInterrupt) {
 		int c = 0;
-		if(format.equalsIgnoreCase("rsng")) {
-			for(Song s : SongManager.getSongs()) {
-				if(checkInterrupt && Thread.interrupted()) return c;
-				try {
-					RSNGSongLoader.saveSong(s);
-					c++;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}else if(format.equalsIgnoreCase("nbs")) {
-			for(Song s : SongManager.getSongs()) {
-				if(checkInterrupt && Thread.interrupted()) return c;
-				try {
-					NBSSongLoader.saveSong(s);
-					c++;
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}else if(format.equalsIgnoreCase("sng")){
-			for(Song s : SongManager.getSongs()) {
-				if(checkInterrupt && Thread.interrupted()) return c;
-				try {
-					SNGSongLoader.saveSong_Export(s);
-					c++;
-				}catch(Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}else if(format.equals("sng-archive")) {
-			try {
-				SNGSongLoader.saveSongs_Export(SongManager.getSongs().toArray(new Song[SongManager.getSongs().size()]));
-				c = SongManager.getSongs().size();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}else if(format.equals("settings")) {
+		if(format.equalsIgnoreCase("settings")) {
 			for(Song s : SongManager.getSongs()) {
 				SongManager.setDefaultSongSettings(s);
 				c++;
+			}
+		}else if(format.toLowerCase().endsWith("-archive")) {
+			String rF = format.substring(0, format.length() - "-archive".length());
+			SongLoader l = SongManager.getSongLoader(rF);
+			if(l == null || !l.supportsSongArchives()) return 0;
+			try {
+				l.saveSongs(new File(l.getSongExportFolder(), "all-songs." + l.getFileExtension()), SongManager.getSongs().stream().toArray(Song[]::new));
+				c = SongManager.getSongs().size();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			SongLoader l = SongManager.getSongLoader(format);
+			if(l == null) return 0;
+			for(Song s : SongManager.getSongs()) {
+				try {
+					l.saveSongs(l.getSongExportFile(s), s);
+					c++;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		return c;

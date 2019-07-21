@@ -4,98 +4,84 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import me.mrletsplay.mrcore.config.ConfigLoader;
 import me.mrletsplay.mrcore.config.CustomConfig;
 import me.mrletsplay.mrcore.config.FileCustomConfig;
+import me.mrletsplay.mrcore.misc.ErroringNullableOptional;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.util.song.Song;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
+import me.mrletsplay.playerradios.util.songloader.impl.NBSSongLoader;
+import me.mrletsplay.playerradios.util.songloader.impl.OpenNBSSongLoader;
+import me.mrletsplay.playerradios.util.songloader.impl.RSNGSongLoader;
+import me.mrletsplay.playerradios.util.songloader.impl.SNGSongLoader;
 
 public class SongManager {
 	
 	private static List<SongLoader> songLoaders = Arrays.asList(
-				new me.mrletsplay.playerradios.util.songloader.impl.NBSSongLoader()
+				new NBSSongLoader(),
+				new SNGSongLoader(),
+				new RSNGSongLoader(),
+				new OpenNBSSongLoader()
 			);
-	private static List<Song> songs;
-	private static File sSets = new File(Main.pl.getDataFolder(),"/song-settings/");
+	private static List<Song> songs = new ArrayList<>();
+	private static File
+		songsFolder = new File(Main.pl.getDataFolder(), "/songs/"),
+		songSettingsFolder = new File(Main.pl.getDataFolder(),"/song-settings/");
 	
 	public static void init() {
-		File nbs = new File(Main.pl.getDataFolder(),"/import/nbs/");
-		nbs.mkdirs();
-		File sng_r = new File(Main.pl.getDataFolder(),"/import/rsng/");
-		sng_r.mkdirs();
-		File sng = new File(Main.pl.getDataFolder(), "/songs/");
-		sng.mkdirs();
-		File sngI = new File(Main.pl.getDataFolder(),"/import/sng/");
-		sngI.mkdirs();
-		
 		for(SongLoader l : songLoaders) {
 			l.getSongImportFolder().mkdirs();
 			l.getSongExportFolder().mkdirs();
 		}
 		
-		sSets.mkdirs();
+		songSettingsFolder.mkdirs();
 		
+		long t = System.currentTimeMillis();
 		songs = new ArrayList<>();
 		Main.pl.getLogger().info("Loading song(s)...");
-		long t = System.currentTimeMillis();
-		int nbsF = 0, rsngF = 0, sngF = 0, sngFI = 0, sets = 0;
-		for(File fl : nbs.listFiles()) {
-			if(!fl.isDirectory()) {
-				Song s = tryNBSImport(fl);
-				if(s==null) {
-					Main.pl.getLogger().info("Skipping import of \""+fl.getName()+"\"...");
-					continue;
-				}
-				if(s!=null) {
-					songs.add(s);
-					nbsF++;
-					fl.delete();
-				}
-			}
-		}
-		for(File fl : sng_r.listFiles()) {
-			if(!fl.isDirectory()) {
-				Song s = tryRSNGImport(fl);
-				if(s==null) {
-					Main.pl.getLogger().info("Skipping import of \""+fl.getName()+"\"...");
-					continue;
-				}
-				if(s!=null) {
-					songs.add(s);
-					rsngF++;
-					fl.delete();
-				}
-			}
-		}
-		for(File fl : sngI.listFiles()) {
-			if(!fl.isDirectory()) {
-				List<Song> ss2 = trySNGImport(fl);
-				if(ss2==null) {
-					Main.pl.getLogger().info("Skipping import of \""+fl.getName()+"\"...");
-					continue;
-				}
-				for(Song s : ss2) {
-					if(s!=null) {
-						s.setID(-1);
-						songs.add(s);
-						sngFI++;
-						fl.delete();
+		Map<String, Long> times = new LinkedHashMap<>();
+		Map<String, Integer> counts = new LinkedHashMap<>();
+		
+		for(SongLoader l : songLoaders) {
+			long tS = System.currentTimeMillis();
+			int count = 0;
+			for(File fl : l.getSongImportFolder().listFiles()) {
+				if(!fl.isDirectory()) {
+					ErroringNullableOptional<List<Song>, Exception> r = tryImport(l, fl);
+					if(!r.isPresent()) {
+						Main.pl.getLogger().info("Failed to load file \"" + fl.getName() + "\" using loader \"" + l.getName() + "\", skipping");
+						r.getException().printStackTrace();
+						continue;
 					}
+					fl.delete();
+					List<Song> ss = r.get();
+					ss.forEach(s -> s.setID(-1)); // Reassign ids
+					songs.addAll(ss);
+					count += ss.size();
 				}
 			}
+			times.put(l.getName(), System.currentTimeMillis() - tS);
+			counts.put(l.getName(), count);
 		}
-		for(File fl : sng.listFiles()) {
+		
+		int sngC = 0, sngSC = 0;
+		SongLoader sngL = getSongLoader("sng");
+		for(File fl : songsFolder.listFiles()) {
 			if(!fl.isDirectory()) {
-				List<Song> ss2 = trySNGImport(fl);
-				if(ss2==null) {
-					Main.pl.getLogger().info("Skipping import of \""+fl.getName()+"\"...");
+				ErroringNullableOptional<List<Song>, Exception> ss2 = tryImport(sngL, fl);
+				if(!ss2.isPresent()) {
+					Main.pl.getLogger().info("Skipping loading of \""+fl.getName()+"\"...");
+					ss2.getException().printStackTrace();
 					continue;
 				}
-				for(Song s : ss2) {
+				for(Song s : ss2.get()) {
 					if(s!=null) {
 						if(s.getID()!=-1 && hasConfiguration(s.getID())) {
 							File cfgFile = getConfigFile(s.getID());
@@ -107,16 +93,18 @@ public class SongManager {
 							s.setOriginalAuthor(originalAuthor);
 							s.setAuthor(author);
 							fl.delete();
+							cfgFile.delete();
 							try {
-								SNGSongLoader.saveSongs(s);
-								s.setSongFile(SNGSongLoader.getSongFile(s));
+								File sF = getSongFile(s);
+								sngL.saveSongs(sF, s);
+								s.setSongFile(sF);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							sets++;
+							sngSC++;
 						}
 						songs.add(s);
-						sngF++;
+						sngC++;
 						if(s.getID()==-1) {
 							fl.delete();
 						}
@@ -124,19 +112,30 @@ public class SongManager {
 				}
 			}
 		}
-		Main.pl.getLogger().info("Loaded "+songs.size()+" song(s) with "+sets+" song-setting files ("+nbsF+" NBS, "+rsngF+" RSNG, "+sngF+" SNG, "+sngFI+" imported SNG) ("+Tools.timeTaken(t, System.currentTimeMillis(), true)+"s)");
+		
+		Main.pl.getLogger().info("Loaded " + songs.size() + " song(s) with " + sngSC + " song-setting files (loaded " + sngC + " sng, imported " +
+				counts.entrySet().stream().map(en -> en.getValue() + " " + en.getKey()).collect(Collectors.joining(", "))
+				+ ") in " + Tools.timeTaken(t, System.currentTimeMillis(), true) + "s");
 	}
 	
 	public static List<Song> getSongs() {
 		return songs;
 	}
 	
+	public static List<SongLoader> getSongLoaders() {
+		return songLoaders;
+	}
+	
+	public static SongLoader getSongLoader(String name) {
+		return songLoaders.stream().filter(s -> s.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+	}
+	
 	private static boolean hasConfiguration(int songID) {
-		return new File(sSets, songID+".yml").exists();
+		return getConfigFile(songID).exists();
 	}
 	
 	public static File getConfigFile(int songID) {
-		return new File(sSets, songID+".yml");
+		return new File(songSettingsFolder, songID+".yml");
 	}
 	
 	public static void setDefaultSongSettings(Song s) {
@@ -165,6 +164,12 @@ public class SongManager {
 		return nbs.listFiles().length + sng_r.listFiles().length + sngI.listFiles().length + sng.listFiles().length;
 	}
 	
+	public static File getSongFile(Song s) {
+		String sName = Tools.validateName(s.getName());
+		File f = new File(songsFolder, sName + "." + s.getID() + ".sng");
+		return f;
+	}
+	
 	public static void registerNewSongs() {
 		int ch = 0;
 		Main.pl.getLogger().info("Converting song(s)...");
@@ -184,8 +189,10 @@ public class SongManager {
 				}
 				s.setID(id);
 				try {
-					SNGSongLoader.saveSongs(s);
-					s.setSongFile(SNGSongLoader.getSongFile(s));
+					SongLoader l = getSongLoader("sng");
+					File sF = getSongFile(s);
+					l.saveSongs(sF, s);
+					s.setSongFile(sF);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -245,56 +252,22 @@ public class SongManager {
 		return ids;
 	}
 	
-	public static List<Song> trySNGImport(File f) {
+	public static ErroringNullableOptional<List<Song>, Exception> tryImport(SongLoader loader, File f) {
 		try {
-			return SNGSongLoader.loadSongs(f);
+			return ErroringNullableOptional.ofErroring(loader.loadSongs(f));
 		}catch(Exception e) {
-			Main.pl.getLogger().info("Failed to load SNG song from file \""+f.getName()+"\"");
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	public static Song tryRSNGImport(File f) {
-		try {
-			return RSNGSongLoader.loadSong(f);
-		}catch(Exception e) {
-			Main.pl.getLogger().info("Failed to load RSNG song from file \""+f.getName()+"\"");
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	public static Song tryNBSImport(File f) {
-		try {
-			return NBSSongLoader.loadSong(f);
-		}catch(Exception e) {
-			Main.pl.getLogger().info("Failed to load NBS song from file \""+f.getName()+"\"");
-			e.printStackTrace();
-			return null;
+//			Main.pl.getLogger().info("Failed to load " + loader.getName() + " song from file \""+f.getName()+"\"");
+//			e.printStackTrace();
+			return ErroringNullableOptional.ofErroring(e);
 		}
 	}
 	
 	public static ImportResult tryAllImport(File f) {
-		List<Song> ss = new ArrayList<>();
-		try {
-			Song s = NBSSongLoader.loadSong(f);
-			if(s!=null) {
-				ss.add(s);
-				return new ImportResult("NBS", ss);
-			}
-		}catch(Exception e) {}
-		try {
-			ss = SNGSongLoader.loadSongs(f);
-			return new ImportResult("SNG", ss);
-		}catch(Exception e) {}
-		try {
-			Song s = RSNGSongLoader.loadSong(f);
-			if(s!=null) {
-				ss.add(s);
-				return new ImportResult("RSNG", ss);
-			}
-		}catch(Exception e) {}
+		for(SongLoader l : songLoaders) {
+			ErroringNullableOptional<List<Song>, Exception> r = tryImport(l, f);
+			if(!r.isPresent()) continue;
+			return new ImportResult(l.getName(), r.get());
+		}
 		return null;
 	}
 	

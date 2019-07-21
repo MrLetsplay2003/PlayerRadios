@@ -3,6 +3,9 @@ package me.mrletsplay.playerradios.util.song;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 
 public enum NotePitch {
+	
+	// Post 1.9: 0.5 * pow(2, key/12)
+	
 	NOTE_0(0, 0.5F, 0.5F),
 	NOTE_1(1, 0.53F, 0.52973F),
 	NOTE_2(2, 0.56F, 0.56123F),

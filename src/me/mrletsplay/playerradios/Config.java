@@ -236,7 +236,8 @@ public class Config {
 		c.addDefault("export.failed", "%prefix% §cExport failed. Check console for more info");
 		c.addDefault("export.wait-all", "%prefix% §6Exporting §7%count% §6song(s)...");
 		c.addDefault("export.done-all", "%prefix% §aExported §7%count% §asong(s) in §7%time%s §a(§7%failed% §afailed)");
-		c.addDefault("export.not-available", "%prefix% §6Export as SNG-archive is not available for single songs");
+		c.addDefault("export.not-available", "%prefix% §6Exporting as an archive is not available for single songs");
+		c.addDefault("export.invalid-song", "%prefix% §cThat song doesn't exist");
 		c.addDefault("reload-complete", "%prefix% §aReload complete");
 		c.addDefault("submit.invalid-url", "%prefix% §cInvalid url");
 		c.addDefault("submit.file-too-big", "%prefix% §cFile too big");
