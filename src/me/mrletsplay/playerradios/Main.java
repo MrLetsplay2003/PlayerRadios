@@ -704,7 +704,8 @@ public class Main extends JavaPlugin {
 			if(!Config.disable_commands || !Config.disable_commands_all) {
 				sender.sendMessage(Config.getHelpMessage("pr-playlist", "pr playlist", ""));
 				if(sender.hasPermission(Config.PERM_EXPORT)) {
-					sender.sendMessage(Config.getHelpMessage("pr-export", "pr export", " <Song-ID"+(sender.hasPermission(Config.PERM_EXPORT_ALL)?"/all":"")+"> <nbs/sng/rsng/sng-archive/settings>")); // TODO
+					sender.sendMessage(Config.getHelpMessage("pr-export", "pr export", " <Song-ID"+(sender.hasPermission(Config.PERM_EXPORT_ALL)?"/all":"")+"> <"
+							+ SongManager.getSongLoaders().stream().map(l -> l.getName() + (l.supportsSongArchives() ? "/" + l.getName() + "-archive" : "")).collect(Collectors.joining("/")) + ">"));
 				}
 				if((Config.enable_submit && (!Config.submit_needs_perm || sender.hasPermission(Config.PERM_SUBMIT))) || sender.hasPermission(Config.PERM_SUBMIT_WHEN_DISABLED)) {
 					sender.sendMessage(Config.getHelpMessage("pr-submit", "pr submit", " <Link>"));
@@ -789,6 +790,7 @@ public class Main extends JavaPlugin {
 					MiscUtils.newMapEntry(0, new SongLoadingException("Song loader not found"))
 				));
 			for(Song s : SongManager.getSongs()) {
+				if(checkInterrupt && Thread.interrupted()) break;
 				try {
 					l.saveSongs(l.getSongExportFile(s), s);
 					c++;

@@ -1,5 +1,6 @@
 package me.mrletsplay.playerradios.util.songloader;
 
+import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,7 +8,7 @@ import java.io.OutputStream;
 public class LittleEndianOutputStream extends DataOutputStream {
 
 	public LittleEndianOutputStream(OutputStream out) {
-		super(out);
+		super(new BufferedOutputStream(out));
 	}
 
 	public void writeLEShort(short val) throws IOException {

@@ -1,5 +1,7 @@
 package me.mrletsplay.playerradios.util.songloader.impl;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -31,7 +33,7 @@ public class SNGSongLoader implements SongLoader {
 	public List<Song> loadSongs(File file) throws IOException {
 		if (file.length() == 0)
 			return Collections.emptyList();
-		try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
+		try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
 			List<Song> songs = new ArrayList<>();
 			byte[] sngT = read(in, 4);
 			String fType = new String(sngT);
@@ -104,7 +106,7 @@ public class SNGSongLoader implements SongLoader {
 	@Override
 	public void saveSongs(File file, Song... songs) throws IOException {
 		IOUtils.createFile(file);
-		try (DataOutputStream out = new DataOutputStream(new FileOutputStream(file))) {
+		try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
 			out.write("sngF".getBytes());
 			for (int song = 0; song < songs.length; song++) {
 				if (Thread.interrupted())

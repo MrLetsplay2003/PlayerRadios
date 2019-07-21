@@ -1,5 +1,6 @@
 package me.mrletsplay.playerradios.util.songloader;
 
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +10,7 @@ public class LittleEndianInputStream extends DataInputStream {
 	private static final int MAX_STRING_LENGTH = 1024;
 
 	public LittleEndianInputStream(InputStream in) {
-		super(in);
+		super(new BufferedInputStream(in));
 	}
 
 	public short readLEShort() throws IOException {
