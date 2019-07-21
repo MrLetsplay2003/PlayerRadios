@@ -108,13 +108,14 @@ public class Config {
 		save_last_listened = config.getBoolean("save-last-listened", true, true);
 		config.addDefault("prefix", "§8[§6PlayerRadios§8]");
 		config.addDefault("inventory-name", "%prefix%");
-		inventory_name = getAndTranslate("config", "inventory-name");
 		config.addDefault("default-station-name", "Default station");
 		allow_station_name_edit = config.getBoolean("allow-station-name-edit", true, true);
 		
 		config.applyDefaults();
 		config.saveToFile();
 		save();
+		
+		inventory_name = getAndTranslate("config", "inventory-name");
 		
 		importLangFile("de");
 		importLangFile("ru");
