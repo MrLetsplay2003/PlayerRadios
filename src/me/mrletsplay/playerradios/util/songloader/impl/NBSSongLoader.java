@@ -162,7 +162,10 @@ public class NBSSongLoader implements SongLoader {
 					dO.writeLEShort((short) ((short) skipLayers + 1));
 					skipLayers = 0;
 					int sound = Tools.getSoundID(n.getSound());
-					if(sound > 9) throw new SongLoadingException("Sound \"" + n.getSound() + "\" isn't supported by the old NBS format. Use OpenNBS instead");
+					if(sound > 9) {
+						file.delete();
+						throw new SongLoadingException("Sound \"" + n.getSound() + "\" isn't supported by the old NBS format. Use OpenNBS instead");
+					}
 					dO.write(sound);
 					dO.write(n.getNote() + 33);
 				}
