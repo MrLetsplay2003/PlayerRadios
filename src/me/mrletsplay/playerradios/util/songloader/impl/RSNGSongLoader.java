@@ -18,6 +18,7 @@ import me.mrletsplay.playerradios.util.song.Layer;
 import me.mrletsplay.playerradios.util.song.Note;
 import me.mrletsplay.playerradios.util.song.Song;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
+import me.mrletsplay.playerradios.util.songloader.SongLoadingException;
 
 public class RSNGSongLoader implements SongLoader {
 
@@ -75,11 +76,10 @@ public class RSNGSongLoader implements SongLoader {
 				return null;
 			}
 			if (name == null || tps == -1) {
-				Main.pl.getLogger().info("Failed to load song \"" + file.getName() + "\"! (Invalid song header)");
 				if (name == null)
-					Main.pl.getLogger().info("Name not set");
+					throw new SongLoadingException("Failed to load song \"" + file.getName() + "\"! (Invalid song header): Name not set");
 				if (tps == -1)
-					Main.pl.getLogger().info("TPS not set");
+					throw new SongLoadingException("Failed to load song \"" + file.getName() + "\"! (Invalid song header): TPS not set");
 			}
 			HashMap<String, String> customSounds = new HashMap<>();
 			if (useCustomSounds) {
@@ -99,15 +99,11 @@ public class RSNGSongLoader implements SongLoader {
 							String val = spl2[1].trim();
 							customSounds.put(type, val);
 						} else {
-							Main.pl.getLogger()
-									.info("Failed to load song from " + file.getName() + ". Error at line: " + ln);
-							return null;
+							throw new SongLoadingException("Failed to load song from " + file.getName() + ". Error at line: " + ln);
 						}
 					}
 				} catch (Exception e) {
-					Main.pl.getLogger().info("Failed to load custom instruments of " + file.getName());
-					e.printStackTrace();
-					return null;
+					throw new SongLoadingException("Failed to load custom instruments of " + file.getName());
 				}
 			}
 			String line;
@@ -126,16 +122,12 @@ public class RSNGSongLoader implements SongLoader {
 						String[] spl2 = n.split(",");
 						String type = spl2[0].trim();
 						if (type.equalsIgnoreCase("pause") || type.equalsIgnoreCase("p")) {
-							if (spl2.length != 2) {
-								Main.pl.getLogger().info("Invalid pause at line " + ln);
-								return null;
-							}
+							if (spl2.length != 2) 
+								throw new SongLoadingException("Invalid pause at line " + ln);
 							currTick += Integer.parseInt(spl2[1].trim());
 						} else if (type.equalsIgnoreCase("note") || type.equalsIgnoreCase("n")) {
-							if (spl2.length < 3 || spl2.length > 4) {
-								Main.pl.getLogger().info("Invalid note at line " + ln);
-								return null;
-							}
+							if (spl2.length < 3 || spl2.length > 4) 
+								throw new SongLoadingException("Invalid note at line " + ln);
 							VersionedSound s;
 							String cSound = null;
 							try {
@@ -166,10 +158,7 @@ public class RSNGSongLoader implements SongLoader {
 					}
 					currTick++;
 				} catch (Exception e) {
-					Main.pl.getLogger().info("Failed to load song. Caught exception at line " + ln
-							+ ". If this is not your mistake, please report this bug with the stack trace below");
-					e.printStackTrace();
-					return null;
+					throw new SongLoadingException("Failed to load song. Caught exception at line " + ln, e);
 				}
 			}
 			return Collections.singletonList(new Song(id, currTick, hLayer, name, layers, tps,

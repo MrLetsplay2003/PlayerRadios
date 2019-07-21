@@ -23,7 +23,7 @@ public class LittleEndianOutputStream extends DataOutputStream {
 	}
 
 	public void writeLEString(String val) throws IOException {
-		writeInt(val.length());
+		writeLEInt(val.length());
 		for (char c : val.toCharArray()) {
 			writeByte(c);
 		}

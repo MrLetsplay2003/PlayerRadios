@@ -27,7 +27,7 @@ public class LittleEndianInputStream extends DataInputStream {
 	}
 
 	public String readLEString() throws IOException {
-		int length = readInt();
+		int length = readLEInt();
 		if (length > MAX_STRING_LENGTH) throw new IllegalArgumentException("Invalid string length: " + length); // Prevent heap overflow
 		StringBuilder sb = new StringBuilder(length);
 		for (; length > 0; --length) {

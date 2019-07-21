@@ -6,8 +6,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
+import me.mrletsplay.mrcore.misc.MiscUtils;
 import me.mrletsplay.playerradios.util.ImportResult;
 import me.mrletsplay.playerradios.util.PasteText;
 import me.mrletsplay.playerradios.util.PlayerRadiosPlaceholder;
@@ -31,6 +35,7 @@ import me.mrletsplay.playerradios.util.UpdateChecker;
 import me.mrletsplay.playerradios.util.UpdateChecker.Result;
 import me.mrletsplay.playerradios.util.song.Song;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
+import me.mrletsplay.playerradios.util.songloader.SongLoadingException;
 
 public class Main extends JavaPlugin {
 	
@@ -426,24 +431,19 @@ public class Main extends JavaPlugin {
 										if(p.hasPermission(Config.PERM_EXPORT_ALL)) {
 											if(!exportRunning) {
 												p.sendMessage(Config.getMessage("export.wait-all").replace("%count%", ""+SongManager.getSongs().size()));
-												long t = System.currentTimeMillis();
 												exportRunning = true;
 												if(SongManager.getSongs().size()>=Config.thread_on_process_when) {
 													tempProcessThread = new Thread(new Runnable() {
 														
 														@Override
 														public void run() {
-															int c = saveAllSongs(eMode, true);
-															exportRunning = false;
-															p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.getSongs().size()-c)));
+															playerExportAll(p, eMode, true);
 															tempProcessThread = null;
 														}
 													}, "PlayerRadios-Process-Thread");
 													tempProcessThread.start();
 												}else {
-													int c = saveAllSongs(eMode, false);
-													exportRunning = false;
-													p.sendMessage(Config.getMessage("export.done-all").replace("%count%", ""+c).replace("%time%", Tools.timeTaken(t, System.currentTimeMillis(), true)).replace("%failed%", ""+(SongManager.getSongs().size()-c)));
+													playerExportAll(p, eMode, false);
 												}
 											}else {
 												p.sendMessage(Config.getMessage("process-already-running"));
@@ -745,8 +745,23 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	private int saveAllSongs(String format, boolean checkInterrupt) {
+	private void playerExportAll(Player p, String format, boolean threadMode) {
+		long t = System.currentTimeMillis();
+		Map.Entry<Integer, List<Entry<Integer, SongLoadingException>>> r = saveAllSongs(format, threadMode);
+		exportRunning = false;
+		p.sendMessage(Config.getMessage("export.done-all", "count", ""+r.getKey(), "time", Tools.timeTaken(t, System.currentTimeMillis(), true), "failed", ""+(SongManager.getSongs().size() - r.getKey())));
+		for(Map.Entry<Integer, SongLoadingException> en : r.getValue()) {
+			if(r.getKey() == -1) {
+				p.sendMessage(Config.getMessage("export.error-line-all", "error", en.getValue().getMessage()));
+			}else {
+				p.sendMessage(Config.getMessage("export.error-line", "song", ""+en.getKey(), "error", en.getValue().getMessage()));
+			}
+		}
+	}
+	
+	private Map.Entry<Integer, List<Map.Entry<Integer, SongLoadingException>>> saveAllSongs(String format, boolean checkInterrupt) {
 		int c = 0;
+		List<Map.Entry<Integer, SongLoadingException>> exs = new ArrayList<>();
 		if(format.equalsIgnoreCase("settings")) {
 			for(Song s : SongManager.getSongs()) {
 				SongManager.setDefaultSongSettings(s);
@@ -755,26 +770,36 @@ public class Main extends JavaPlugin {
 		}else if(format.toLowerCase().endsWith("-archive")) {
 			String rF = format.substring(0, format.length() - "-archive".length());
 			SongLoader l = SongManager.getSongLoader(rF);
-			if(l == null || !l.supportsSongArchives()) return 0;
+			if(l == null || !l.supportsSongArchives()) return MiscUtils.newMapEntry(0, Collections.singletonList(
+						MiscUtils.newMapEntry(-1, new SongLoadingException("Song loader not found or doesn't support song archives"))
+					));
 			try {
 				l.saveSongs(new File(l.getSongExportFolder(), "all-songs." + l.getFileExtension()), SongManager.getSongs().stream().toArray(Song[]::new));
 				c = SongManager.getSongs().size();
+			}catch(SongLoadingException e) {
+				return MiscUtils.newMapEntry(0, Collections.singletonList(
+						MiscUtils.newMapEntry(-1, e)
+					));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}else {
 			SongLoader l = SongManager.getSongLoader(format);
-			if(l == null) return 0;
+			if(l == null) return MiscUtils.newMapEntry(0, Collections.singletonList(
+					MiscUtils.newMapEntry(0, new SongLoadingException("Song loader not found"))
+				));
 			for(Song s : SongManager.getSongs()) {
 				try {
 					l.saveSongs(l.getSongExportFile(s), s);
 					c++;
+				}catch(SongLoadingException e) {
+					exs.add(MiscUtils.newMapEntry(s.getID(), e));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return c;
+		return MiscUtils.newMapEntry(c, exs);
 	}
 
 }

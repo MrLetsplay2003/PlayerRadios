@@ -13,12 +13,12 @@ import java.util.List;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.mrcore.io.IOUtils;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.util.Tools;
 import me.mrletsplay.playerradios.util.song.Layer;
 import me.mrletsplay.playerradios.util.song.Note;
 import me.mrletsplay.playerradios.util.song.Song;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
+import me.mrletsplay.playerradios.util.songloader.SongLoadingException;
 
 public class SNGSongLoader implements SongLoader {
 
@@ -37,7 +37,7 @@ public class SNGSongLoader implements SongLoader {
 			String fType = new String(sngT);
 			boolean isFinished = false;
 			if (!fType.equals("sngF"))
-				throw new IllegalArgumentException("File provided is not an SNG-File");
+				throw new SongLoadingException("File provided is not an SNG-File");
 			while (!isFinished) {
 				HashMap<String, String> customSounds = new HashMap<>();
 				int id = in.readShort();
@@ -72,7 +72,7 @@ public class SNGSongLoader implements SongLoader {
 						if (s == null)
 							cSound = customSounds.get("" + data);
 						if (s == null && cSound == null)
-							s = Tools.getSound(0);
+							throw new SongLoadingException("Invalid instrument id");
 						l.setNote(currTick, s != null ? new Note(s, data1) : new Note(cSound, data1, -1));
 					} else if (nType == 1) {
 						// Pause
@@ -160,11 +160,9 @@ public class SNGSongLoader implements SongLoader {
 					int data;
 					if (n.isCustom()) {
 						if (!cSoundIDs.containsKey(n.getCustomSound())) {
-							Main.pl.getLogger().info("Failed to save song \"" + s.getName() + "\": Custom sound \""
-									+ n.getCustomSound() + "\" not set");
-							out.close();
 							file.delete();
-							return;
+							throw new SongLoadingException("Failed to save song \"" + s.getName() + "\": Custom sound \""
+									+ n.getCustomSound() + "\" not set");
 						}
 						data = cSoundIDs.get(n.getCustomSound());
 					} else {

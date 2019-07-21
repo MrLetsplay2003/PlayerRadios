@@ -18,6 +18,7 @@ import me.mrletsplay.playerradios.util.song.Song;
 import me.mrletsplay.playerradios.util.songloader.LittleEndianInputStream;
 import me.mrletsplay.playerradios.util.songloader.LittleEndianOutputStream;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
+import me.mrletsplay.playerradios.util.songloader.SongLoadingException;
 
 public class OpenNBSSongLoader implements SongLoader {
 
@@ -37,9 +38,9 @@ public class OpenNBSSongLoader implements SongLoader {
 			HashMap<Integer, Layer> layers = new HashMap<>();
 			int length = 0;
 			short fTB = dIn.readLEShort();
-			if(fTB != 0) throw new IllegalArgumentException("File is not an opennbs file (maybe it's a normal nbs file)");
+			if(fTB != 0) throw new SongLoadingException("File is not an opennbs file (maybe it's a normal nbs file)");
 			byte nbsV = dIn.readByte();
-			if(nbsV > 2) throw new IllegalArgumentException("Invalid/Unsupported opennbs version: " + nbsV);
+			if(nbsV > 2) throw new SongLoadingException("Invalid/Unsupported OpenNBS version: " + nbsV);
 			dIn.readByte(); // First custom instrument index
 			short songHeight = dIn.readLEShort();
 			for(int i = 0; i < songHeight; i++) {
@@ -95,9 +96,7 @@ public class OpenNBSSongLoader implements SongLoader {
 					byte note = dIn.readByte();
 					Layer l = layers.get((int) layer);
 					VersionedSound s = Tools.getSound(instrument);
-					if (s == null) {
-						s = Tools.getSound(0);
-					}
+					if (s == null) throw new SongLoadingException("Invalid instrument id");
 					int p = note - 33;
 					if (Config.use_alternate_nbs_import) {
 						while (p > 24) {
