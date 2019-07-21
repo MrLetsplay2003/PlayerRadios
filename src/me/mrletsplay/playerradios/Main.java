@@ -705,7 +705,7 @@ public class Main extends JavaPlugin {
 				sender.sendMessage(Config.getHelpMessage("pr-playlist", "pr playlist", ""));
 				if(sender.hasPermission(Config.PERM_EXPORT)) {
 					sender.sendMessage(Config.getHelpMessage("pr-export", "pr export", " <Song-ID"+(sender.hasPermission(Config.PERM_EXPORT_ALL)?"/all":"")+"> <"
-							+ SongManager.getSongLoaders().stream().map(l -> l.getName() + (l.supportsSongArchives() ? "/" + l.getName() + "-archive" : "")).collect(Collectors.joining("/")) + ">"));
+							+ SongManager.getSongLoaders().stream().map(l -> l.getName() + (l.supportsSongArchives() ? "/" + l.getName() + "-archive" : "")).collect(Collectors.joining("/")) + "/settings>"));
 				}
 				if((Config.enable_submit && (!Config.submit_needs_perm || sender.hasPermission(Config.PERM_SUBMIT))) || sender.hasPermission(Config.PERM_SUBMIT_WHEN_DISABLED)) {
 					sender.sendMessage(Config.getHelpMessage("pr-submit", "pr submit", " <Link>"));
