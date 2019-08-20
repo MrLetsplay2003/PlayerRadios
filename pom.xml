@@ -17,6 +17,21 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>${project.basedir}</directory>
+				<includes>
+					<include>plugin.yml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>lang</directory>
+				<targetPath>lang</targetPath>
+				<includes>
+					<include>*.*</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 	<repositories>
@@ -35,8 +50,12 @@
 	</repositories>
 
 	<dependencies>
-		<!-- <dependency> <groupId>com.github.mrletsplay2003</groupId> <artifactId>MrCore</artifactId> 
-			<version>master-SNAPSHOT</version> <scope>provided</scope> </dependency> -->
+		<dependency>
+			<groupId>com.github.mrletsplay2003</groupId>
+			<artifactId>MrCore</artifactId>
+			<version>master-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>me.clip</groupId>
 			<artifactId>placeholderapi</artifactId>
@@ -48,11 +67,6 @@
 			<artifactId>spigot-api</artifactId>
 			<version>1.14.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>LATEST</version>
 		</dependency>
 	</dependencies>
 </project>
