@@ -12,10 +12,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIHolder;
 import me.mrletsplay.mrcore.bukkitimpl.ItemUtils;
 import me.mrletsplay.mrcore.bukkitimpl.config.BukkitCustomConfig;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUI;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIHolder;
 import me.mrletsplay.mrcore.config.ConfigLoader;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
@@ -223,7 +223,7 @@ public class StationManager {
 		Bukkit.getScheduler().runTaskLater(Main.pl, () -> {
 			for(Player p : GUIs.STATION_GUI.getAllOpenInstances()) {
 				Inventory inv = p.getOpenInventory().getTopInventory();
-				GUIHolder h = GUIUtils.getGUIHolder(inv);
+				GUIHolder h = GUI.getGUIHolder(inv);
 				Object o = h.getProperty(Main.pl, "station_id");
 				if(o != null && (int) o == rID) {
 					if(fIdx != null) h.setProperty(Main.pl, "index", (int) fIdx);

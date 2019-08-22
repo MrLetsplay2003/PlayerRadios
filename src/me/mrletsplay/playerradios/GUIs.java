@@ -16,18 +16,18 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUI;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIBuildEvent;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIBuildPageItemEvent;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIBuilder;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIBuilderMultiPage;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIElement;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIElementAction;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIElementActionEvent;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.GUIMultiPage;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.ItemSupplier;
-import me.mrletsplay.mrcore.bukkitimpl.GUIUtils.StaticGUIElement;
 import me.mrletsplay.mrcore.bukkitimpl.ItemUtils;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUI;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIBuilder;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIBuilderMultiPage;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIElement;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIElementAction;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIMultiPage;
+import me.mrletsplay.mrcore.bukkitimpl.gui.ItemSupplier;
+import me.mrletsplay.mrcore.bukkitimpl.gui.StaticGUIElement;
+import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIBuildEvent;
+import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIBuildPageItemEvent;
+import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIElementActionEvent;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedDyeColor;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedMaterial;
 import me.mrletsplay.mrcore.misc.StringUtils;
@@ -197,7 +197,7 @@ public class GUIs {
 		builder.addPreviousPageItem(53, ItemUtils.createItem(ItemUtils.arrowRight(), Config.getMessage("gui.next-page")));
 		
 		builder.addPageSlotsInRange(0, 44);
-		return builder.build();
+		return builder.create();
 	}
 	
 	private static GUIMultiPage<Integer> buildStationGUI() {
@@ -557,7 +557,7 @@ public class GUIs {
 		}));
 		
 		builder.addPageSlotsInRange(37, 43);
-		return builder.build();
+		return builder.create();
 	}
 	
 	private static GUIMultiPage<Song> buildSongGUI() {
@@ -692,7 +692,7 @@ public class GUIs {
 		
 		builder.addPageSlotsInRange(0, 44);
 		
-		return builder.build();
+		return builder.create();
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -718,7 +718,7 @@ public class GUIs {
 		b.setDragDropListener(event -> {
 			event.setCancelled(false);
 		});
-		return b.build();
+		return b.create();
 	}
 	
 }
