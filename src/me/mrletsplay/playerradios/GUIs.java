@@ -23,7 +23,7 @@ import me.mrletsplay.mrcore.bukkitimpl.gui.GUIBuilderMultiPage;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIElement;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIElementAction;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIMultiPage;
-import me.mrletsplay.mrcore.bukkitimpl.gui.ItemSupplier;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIItemSupplier;
 import me.mrletsplay.mrcore.bukkitimpl.gui.StaticGUIElement;
 import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIBuildEvent;
 import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIBuildPageItemEvent;
@@ -85,7 +85,7 @@ public class GUIs {
 	
 	private static GUIMultiPage<RadioStation> buildStationsGUI() {
 		GUIBuilderMultiPage<RadioStation> builder = new GUIBuilderMultiPage<>(Config.inventory_name, 6);
-		builder.setSupplier(new ItemSupplier<RadioStation>() {
+		builder.setSupplier(new GUIItemSupplier<RadioStation>() {
 			
 			@Override
 			public GUIElement toGUIElement(GUIBuildPageItemEvent<RadioStation> event, RadioStation it) {
@@ -202,7 +202,7 @@ public class GUIs {
 	
 	private static GUIMultiPage<Integer> buildStationGUI() {
 		GUIBuilderMultiPage<Integer> builder = new GUIBuilderMultiPage<>(Config.inventory_name, 6);
-		builder.setSupplier(new ItemSupplier<Integer>() {
+		builder.setSupplier(new GUIItemSupplier<Integer>() {
 			
 			@Override
 			public GUIElement toGUIElement(GUIBuildPageItemEvent<Integer> event1, Integer item) {
@@ -572,7 +572,7 @@ public class GUIs {
 				VersionedMaterial.MUSIC_DISC_STRAD,
 		};
 		GUIBuilderMultiPage<Song> builder = new GUIBuilderMultiPage<>(Config.inventory_name, 6);
-		builder.setSupplier(new ItemSupplier<Song>() {
+		builder.setSupplier(new GUIItemSupplier<Song>() {
 
 			@Override
 			public GUIElement toGUIElement(GUIBuildPageItemEvent<Song> event, Song item) {
