@@ -1,7 +1,5 @@
 package me.mrletsplay.playerradios;
 
-import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,11 +12,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
 import me.mrletsplay.playerradios.util.UpdateChecker;
+import me.mrletsplay.playerradios.util.action.CancelTask;
+import me.mrletsplay.playerradios.util.action.PlayerAction;
+import me.mrletsplay.playerradios.util.action.PlayerActions;
+import me.mrletsplay.playerradios.util.action.impl.PlayerRenameStationAction;
 import net.md_5.bungee.api.ChatColor;
 
 public class Events implements Listener {
 	
-	public static HashMap<Player, Integer[]> typing = new HashMap<>();
+//	public static HashMap<Player, Integer[]> typing = new HashMap<>();
 	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e){
@@ -62,27 +64,27 @@ public class Events implements Listener {
 	
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
-		if(typing.containsKey(e.getPlayer())) {
-			Integer[] ids = typing.get(e.getPlayer());
-			int id = ids[0];
-			if(ids[1]!=-1) {
-				Bukkit.getScheduler().cancelTask(ids[1]);
-			}
-			typing.remove(e.getPlayer());
-			RadioStation r = StationManager.getRadioStation(id);
-			if(e.getMessage().length()<=Config.max_station_name_length) {
-				String oName = r.getName();
-				String nm = e.getMessage();
-				if(Config.allow_color && (!Config.color_needs_permission || e.getPlayer().hasPermission(Config.PERM_ALLOW_COLOR))) {
-					nm = ChatColor.translateAlternateColorCodes('&', nm);
+		if(PlayerActions.hasAction(e.getPlayer())) {
+			PlayerAction a = PlayerActions.getAction(e.getPlayer());
+			if(a instanceof PlayerRenameStationAction) {
+				PlayerActions.removeAction(e.getPlayer());
+				PlayerRenameStationAction action = (PlayerRenameStationAction) a;
+				action.removeCancelTask();
+				RadioStation r = StationManager.getRadioStation(action.getStationID());
+				if(e.getMessage().length()<=Config.max_station_name_length) {
+					String oName = r.getName();
+					String nm = e.getMessage();
+					if(Config.allow_color && (!Config.color_needs_permission || e.getPlayer().hasPermission(Config.PERM_ALLOW_COLOR))) {
+						nm = ChatColor.translateAlternateColorCodes('&', nm);
+					}
+					r.setName(nm);
+					e.getPlayer().sendMessage(Config.getMessage("station.set.name").replace("%old-name%", oName).replace("%new-name%", nm));
+				}else {
+					e.getPlayer().sendMessage(Config.getMessage("station.name-too-long"));
 				}
-				r.setName(nm);
-				e.getPlayer().sendMessage(Config.getMessage("station.set.name").replace("%old-name%", oName).replace("%new-name%", nm));
-			}else {
-				e.getPlayer().sendMessage(Config.getMessage("station.name-too-long"));
+				Bukkit.getScheduler().runTask(Main.pl, () -> e.getPlayer().openInventory(GUIs.getStationGUI(e.getPlayer(), action.getStationID(), 0)));
+				e.setCancelled(true);
 			}
-			Bukkit.getScheduler().runTask(Main.pl, () -> e.getPlayer().openInventory(GUIs.getStationGUI(e.getPlayer(), id, 0)));
-			e.setCancelled(true);
 		}
 	}
 	

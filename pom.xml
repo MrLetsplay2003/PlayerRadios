@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>PlayerRadios</groupId>
 	<artifactId>PlayerRadios</artifactId>
-	<version>3.1</version>
+	<version>3.2</version>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -47,13 +47,17 @@
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
+		<repository>
+			<id>Graphite-Official</id>
+			<url>http://graphite-official.com/repo/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
 		<dependency>
-			<groupId>com.github.mrletsplay2003</groupId>
+			<groupId>me.mrletsplay</groupId>
 			<artifactId>MrCore</artifactId>
-			<version>master-SNAPSHOT</version>
+			<version>2.3.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

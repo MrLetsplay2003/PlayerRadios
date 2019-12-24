@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -14,7 +13,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import me.mrletsplay.mrcore.bukkitimpl.ItemUtils;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUI;
@@ -22,8 +20,8 @@ import me.mrletsplay.mrcore.bukkitimpl.gui.GUIBuilder;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIBuilderMultiPage;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIElement;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIElementAction;
-import me.mrletsplay.mrcore.bukkitimpl.gui.GUIMultiPage;
 import me.mrletsplay.mrcore.bukkitimpl.gui.GUIItemSupplier;
+import me.mrletsplay.mrcore.bukkitimpl.gui.GUIMultiPage;
 import me.mrletsplay.mrcore.bukkitimpl.gui.StaticGUIElement;
 import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIBuildEvent;
 import me.mrletsplay.mrcore.bukkitimpl.gui.event.GUIBuildPageItemEvent;
@@ -35,6 +33,8 @@ import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
 import me.mrletsplay.playerradios.util.SongManager;
 import me.mrletsplay.playerradios.util.Tools;
+import me.mrletsplay.playerradios.util.action.PlayerActions;
+import me.mrletsplay.playerradios.util.action.impl.PlayerRenameStationAction;
 import me.mrletsplay.playerradios.util.song.Song;
 
 public class GUIs {
@@ -400,11 +400,7 @@ public class GUIs {
 				if(Config.allow_station_name_edit || p.hasPermission(Config.PERM_RENAME_WHEN_DISABLED)) {
 					p.closeInventory();
 					p.sendMessage(Config.getMessage("station.rename"));
-					BukkitTask tID = null;
-					if(Config.max_type_time>0){
-						tID = Bukkit.getScheduler().runTaskLater(Main.pl, new CancelTask(p), Config.max_type_time*20);
-					}
-					Events.typing.put(p, new Integer[] {id, (tID!=null?tID.getTaskId():-1)});
+					PlayerActions.setAction(p, new PlayerRenameStationAction(p, id));
 				}else {
 					p.sendMessage(Config.getMessage("station.rename-not-allowed"));
 				}

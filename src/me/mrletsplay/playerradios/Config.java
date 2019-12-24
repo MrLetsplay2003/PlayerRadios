@@ -47,7 +47,7 @@ public class Config {
 	}
 	
 	public static void init(){
-		config.setHeader(" Plugin version: "+Main.PLUGIN_VERSION+"\n");
+		config.setHeader(" Plugin version: "+Main.pluginVersion+"\n");
 		config.setComment("use-uuids", " Should always be enabled (will automatically be disabled if server is in offline/cracked mode)");
 		config.setComment("sleep-ticks", " Determines the amount of ticks to wait after song end. If you don't know what to set this to, just leave it as is");
 		config.setComment("show-automatically-named", " If enabled, songs that are automatically named by file name (because they don't contain a title in the NBS file) will have the suffix \"(Automatically named)\"");

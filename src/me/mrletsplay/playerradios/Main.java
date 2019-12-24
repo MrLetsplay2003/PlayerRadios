@@ -49,8 +49,8 @@ public class Main extends JavaPlugin {
 	 * cn file?
 	 */
 
-	public static String PLUGIN_VERSION;
 	public static Plugin pl;
+	public static String pluginVersion;
 	private static Thread t, t2;
 	public static boolean enabled;
 	public static boolean exportRunning = false;
@@ -64,7 +64,7 @@ public class Main extends JavaPlugin {
 		MrCoreBukkitImpl.loadMrCore(this);
 		pl = this;
 		enabled = false;
-		PLUGIN_VERSION = getDescription().getVersion();
+		pluginVersion = getDescription().getVersion();
 		Config.init();
 		PlayerManager.init();
 		getLogger().info("Detected MC server version: " + NMSVersion.getCurrentServerVersion().getFriendlyName() + " (NMS version: " + NMSVersion.getCurrentServerVersion().getNMSName() + ")");
@@ -79,7 +79,7 @@ public class Main extends JavaPlugin {
 					}
 				}
 			}
-			getLogger().info("Current version: "+PLUGIN_VERSION+", Newest version: "+res.updVer);
+			getLogger().info("Current version: "+pluginVersion+", Newest version: "+res.updVer);
 			if(res.updAvailable) {
 				getLogger().info("----------------------------------------------");
 				getLogger().info("There's an update available: "+res.updVer);
@@ -158,7 +158,7 @@ public class Main extends JavaPlugin {
 		Metrics m = new Metrics(this);
 		m.addCustomChart(new Metrics.SimplePie("use_uuids", () -> String.valueOf(Config.use_uuids)));
 		m.addCustomChart(new Metrics.SingleLineChart("song_count", SongManager.getSongs()::size));
-		getLogger().info("Enabled PlayerRadios v"+PLUGIN_VERSION);
+		getLogger().info("Enabled PlayerRadios v"+pluginVersion);
 	}
 	
 	private void init() {
@@ -244,7 +244,7 @@ public class Main extends JavaPlugin {
 				if(args.length>=1) {
 					if (args[0].equalsIgnoreCase("version")) {
 						if (p.hasPermission(Config.PERM_NOTIFY_UPDATE)) {
-							p.sendMessage("Current PlayerRadios version: §7"+PLUGIN_VERSION);
+							p.sendMessage("Current PlayerRadios version: §7"+pluginVersion);
 							if(Config.enable_update_check && Config.update_check_on_command) {
 								Result r = UpdateChecker.checkForUpdate();
 								if(r.updAvailable) {
