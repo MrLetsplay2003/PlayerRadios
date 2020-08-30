@@ -40,12 +40,15 @@ public class OpenNBSSongLoader implements SongLoader {
 			short fTB = dIn.readLEShort();
 			if(fTB != 0) throw new SongLoadingException("File is not an opennbs file (maybe it's a normal nbs file)");
 			byte nbsV = dIn.readByte();
-			if(nbsV > 2) throw new SongLoadingException("Invalid/Unsupported OpenNBS version: " + nbsV);
-			dIn.readByte(); // First custom instrument index
+			if(nbsV > 4) throw new SongLoadingException("Invalid/Unsupported OpenNBS version: " + nbsV);
+			dIn.readByte(); // Vanilla instrument count / First custom instrument index
+			if(nbsV >= 3) dIn.readLEShort(); // Song length
+			
 			short songHeight = dIn.readLEShort();
 			for(int i = 0; i < songHeight; i++) {
 				layers.put(i, new Layer());
 			}
+			
 			String title = dIn.readLEString();
 			if (title.equals(""))
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'))
@@ -65,6 +68,7 @@ public class OpenNBSSongLoader implements SongLoader {
 					}
 				}
 			}
+			
 			dIn.readLEString(); // Description
 			float speed = dIn.readLEShort() / 100f;
 			dIn.readBoolean(); // Auto-save
@@ -76,6 +80,13 @@ public class OpenNBSSongLoader implements SongLoader {
 			dIn.readLEInt(); // Blocks added
 			dIn.readLEInt(); // Blocks removed
 			dIn.readLEString(); // Midi/schematic file name
+			
+			if(nbsV >= 4) {
+				dIn.readBoolean(); // TODO: Looping on/off
+				dIn.readByte(); // Max loop count
+				dIn.readLEShort(); // Loop start tick
+			}
+			
 			short tick = -1;
 			while (true) {
 				short jTicks = dIn.readLEShort(); // jumps to next tick
@@ -106,9 +117,18 @@ public class OpenNBSSongLoader implements SongLoader {
 							p += 12;
 						}
 					}
-					l.setNote(tick, new Note(s, p));
+					
+					if(nbsV >= 4) {
+						int velocity = dIn.readByte();
+						int panning = dIn.readByte();
+						short pitch = dIn.readLEShort();
+						l.setNote(tick, new Note(s, p, velocity, panning, pitch));
+					}else {
+						l.setNote(tick, new Note(s, p));
+					}
 				}
 			}
+			
 			try {
 				for (int i = 0; i < songHeight; i++) {
 					Layer l = layers.get(i);
@@ -127,7 +147,8 @@ public class OpenNBSSongLoader implements SongLoader {
 					l.setStereo(100);
 				}
 			}
-			// Custom instruments are ignored
+			
+			// TODO: Custom instruments are ignored
 			return Collections.singletonList(
 					new Song(-1, length, songHeight, title, layers, speed, (author.equals("") ? null : author),
 							(originalAuthor.equals("") ? null : originalAuthor), null, null));

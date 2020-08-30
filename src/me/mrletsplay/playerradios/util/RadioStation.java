@@ -288,9 +288,10 @@ public class RadioStation {
 							}else {
 								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getCustomSound(), vol / 10f, NotePitch.getPitch(n.getNote()));
 							}
+							
 							if(Config.enable_particles) {
 								if(NMSVersion.getCurrentServerVersion().isOlderThan(NMSVersion.V1_13_R1)) {
-									p.getWorld().playEffect(p.getLocation().add(0, (p.isSneaking()?1.9:2.2), 0), org.bukkit.Effect.valueOf("NOTE"), 0);
+									p.getWorld().playEffect(p.getLocation().add(0, (p.isSneaking() ? 1.9 : 2.2), 0), org.bukkit.Effect.valueOf("NOTE"), 0);
 								}else {
 									p.getWorld().spawnParticle(org.bukkit.Particle.NOTE, p.getLocation().add(0, (p.isSneaking()?1.9:2.2), 0), 1);
 								}
