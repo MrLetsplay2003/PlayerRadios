@@ -1,8 +1,6 @@
 package me.mrletsplay.playerradios.util.songloader;
 
-import me.mrletsplay.mrcore.misc.FriendlyException;
-
-public class SongLoadingException extends FriendlyException {
+public class SongLoadingException extends RuntimeException {
 
 	private static final long serialVersionUID = -1228973036987518399L;
 
