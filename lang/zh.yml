@@ -1,3 +1,4 @@
+### CustomConfig version: 2.0
 creation-disabled: "%prefix% §c电台创建目前被配置为关闭"
 time-format: "秒,分,时"
 still-loading: "%prefix% §cPlayerRadios 仍在加载，请稍候"

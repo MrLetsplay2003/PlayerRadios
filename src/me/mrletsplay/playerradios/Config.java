@@ -119,6 +119,8 @@ public class Config {
 		
 		importLangFile("de");
 		importLangFile("ru");
+		importLangFile("sr");
+		importLangFile("zh");
 		
 		File langFile = new File(Main.pl.getDataFolder(), "/lang/"+language+".yml");
 		messages = getMessageConfig(langFile);
