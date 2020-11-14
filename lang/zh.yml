@@ -118,8 +118,8 @@ bugreport.success: "%prefix% §aBug 报告已被创建: §7%link%§a。在 spigo
 process-already-running: "§c这里已经有一个运行中的进程，请稍后再进行您的操作"
 world-blacklisted: "%prefix% §cPlayerRadios 在这个世界被禁用"
 commands-disabled: "%prefix% §cPlayerRadios 命令被禁用。请使用 /pr 来打开GUI进行操作"
-songinfo.song-doesnt-exist: "%prefix% §c那首歌曲并不存在"
-songinfo.: "%prefix% §c那首歌曲并不存在"
+#songinfo.song-doesnt-exist: "%prefix% §c那首歌曲并不存在"
+#songinfo.: "%prefix% §c那首歌曲并不存在"
 
 placeholderapi.listening.station.none: "无"
 placeholderapi.listening.station.owner.none: "-"
