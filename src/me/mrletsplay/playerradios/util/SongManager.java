@@ -265,6 +265,7 @@ public class SongManager {
 	public static ImportResult tryAllImport(File f) {
 		for(SongLoader l : songLoaders) {
 			ErroringNullableOptional<List<Song>, Exception> r = tryImport(l, f);
+			System.out.println(r);
 			if(!r.isPresent()) continue;
 			return new ImportResult(l.getName(), r.get());
 		}

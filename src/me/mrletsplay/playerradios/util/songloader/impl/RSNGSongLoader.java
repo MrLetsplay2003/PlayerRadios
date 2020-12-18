@@ -12,7 +12,6 @@ import java.util.List;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.mrcore.io.IOUtils;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.util.Tools;
 import me.mrletsplay.playerradios.util.song.Layer;
 import me.mrletsplay.playerradios.util.song.Note;
@@ -65,15 +64,11 @@ public class RSNGSongLoader implements SongLoader {
 							useCustomSounds = Tools.stringToBoolean(val);
 						}
 					} else {
-						Main.pl.getLogger()
-								.info("Failed to load song from " + file.getName() + ". Error at line: " + ln);
-						return null;
+						throw new SongLoadingException("Failed to load song from " + file.getName() + ". Error at line: " + ln);
 					}
 				}
 			} catch (Exception e) {
-				Main.pl.getLogger().info("Failed to load song header of " + file.getName());
-				e.printStackTrace();
-				return null;
+				throw new SongLoadingException("Failed to load song header of " + file.getName());
 			}
 			if (name == null || tps == -1) {
 				if (name == null)

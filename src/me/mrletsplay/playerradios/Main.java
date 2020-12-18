@@ -2,12 +2,8 @@ package me.mrletsplay.playerradios;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,15 +20,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 import me.mrletsplay.mrcore.misc.MiscUtils;
-import me.mrletsplay.playerradios.util.ImportResult;
-import me.mrletsplay.playerradios.util.PasteText;
+import me.mrletsplay.playerradios.command.CommandPlayerRadios;
 import me.mrletsplay.playerradios.util.PlayerRadiosPlaceholder;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.RadioStations;
 import me.mrletsplay.playerradios.util.SongManager;
 import me.mrletsplay.playerradios.util.Tools;
 import me.mrletsplay.playerradios.util.UpdateChecker;
-import me.mrletsplay.playerradios.util.UpdateChecker.Result;
 import me.mrletsplay.playerradios.util.song.Song;
 import me.mrletsplay.playerradios.util.songloader.SongLoader;
 import me.mrletsplay.playerradios.util.songloader.SongLoadingException;
@@ -158,6 +152,7 @@ public class Main extends JavaPlugin {
 		Metrics m = new Metrics(this);
 		m.addCustomChart(new Metrics.SimplePie("use_uuids", () -> String.valueOf(Config.use_uuids)));
 		m.addCustomChart(new Metrics.SingleLineChart("song_count", SongManager.getSongs()::size));
+		getCommand("playerradios").setExecutor(new CommandPlayerRadios());
 		getLogger().info("Enabled PlayerRadios v"+pluginVersion);
 	}
 	
@@ -243,55 +238,12 @@ public class Main extends JavaPlugin {
 				}
 				if(args.length>=1) {
 					if (args[0].equalsIgnoreCase("version")) {
-						if (p.hasPermission(Config.PERM_NOTIFY_UPDATE)) {
-							p.sendMessage("Current PlayerRadios version: §7"+pluginVersion);
-							if(Config.enable_update_check && Config.update_check_on_command) {
-								Result r = UpdateChecker.checkForUpdate();
-								if(r.updAvailable) {
-									UpdateChecker.sendUpdateMessage(r, p);
-								}else {
-									p.sendMessage("§aYou are using the newest version of PlayerRadios");
-								}
-							}
-						} else {
-							sendCommandHelp(p, null);
-						}
+						
 						return true;
 					}else if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
-						if(p.hasPermission(Config.PERM_RELOAD)) {
-							if(args.length == 1){
-								Config.config.reload(false);
-								Bukkit.getPluginManager().disablePlugin(this);
-								Bukkit.getPluginManager().enablePlugin(this);
-								p.sendMessage(Config.getMessage("reload-complete"));
-							}else{
-								sendCommandHelp(p, null);
-							}
-						}else {
-							sendCommandHelp(p, null);
-						}
-						return true;
+						
 					}else if(args[0].equalsIgnoreCase("bugreport")) {
-						if(p.hasPermission(Config.PERM_ALLOW_BUGREPORT)) {
-							if(args.length == 1){
-								try {
-									List<String> config = Files.readAllLines(Config.config.getConfigFile().toPath());
-									List<String> stations = Files.readAllLines(StationManager.stationFile.toPath());
-									p.sendMessage(Config.getMessage("bugreport.success", "link", PasteText.glotSafe(
-											"config.yml",
-											config.stream().collect(Collectors.joining("\n")),
-											"stations.yml",
-											stations.stream().collect(Collectors.joining("\n")))));
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}else{
-								sendCommandHelp(p, null);
-							}
-						}else {
-							sendCommandHelp(p, null);
-						}
-						return true;
+						
 					}
 				}
 
@@ -314,178 +266,13 @@ public class Main extends JavaPlugin {
 						p.sendMessage(Config.getMessage("commands-disabled"));
 						return true;
 					}else if(args[0].equalsIgnoreCase("submit")) {
-						if(args.length==2) {
-							if((Config.enable_submit && (Config.submit_needs_perm && sender.hasPermission(Config.PERM_SUBMIT) || !Config.submit_needs_perm)) || sender.hasPermission(Config.PERM_SUBMIT_WHEN_DISABLED)) {
-								if(tempProcessThread!=null) {
-									p.sendMessage(Config.getMessage("process-already-running"));
-									return true;
-								}
-								tempProcessThread = new Thread(new Runnable() {
-									
-									@Override
-									public void run() {
-										try {
-											URL url = new URL(args[1]);
-											if(Tools.getFileSize(url)/1024<=Config.submit_max_file_size) {
-												File dlFolder = new File(pl.getDataFolder(), "/import/download/");
-												p.sendMessage(Config.getMessage("submit.downloading"));
-												File f = Tools.downloadWithFileName(url, dlFolder);
-												p.sendMessage(Config.getMessage("submit.reading"));
-												ImportResult ss = SongManager.tryAllImport(f);
-												f.delete();
-												dlFolder.delete();
-												if(ss!=null) {
-													for(Song s : ss.songs) {
-														s.setID(-1);
-														SongManager.getSongs().add(s);
-													}
-													SongManager.registerNewSongs();
-													p.sendMessage(Config.getMessage("submit.success").replace("%count%", ss.songs.size()+"").replace("%format%", ss.format));
-												}else {
-													p.sendMessage(Config.getMessage("submit.invalid-file"));
-												}
-											}else {
-												p.sendMessage(Config.getMessage("submit.file-too-big"));
-											}
-										}catch(MalformedURLException e) {
-											p.sendMessage(Config.getMessage("submit.invalid-url"));
-										} catch (IOException e) {
-											sendCommandHelp(p, null);
-										}
-										tempProcessThread = null;
-									}
-								},  "PlayerRadios-Process-Thread");
-								tempProcessThread.start();
-							}else {
-								sendCommandHelp(p, null);
-							}
-						}else {
-							sendCommandHelp(p, null);
-						}
+						
 					}else if(args[0].equalsIgnoreCase("search")) {
-						if(Config.allow_create_stations || p.hasPermission(Config.PERM_CREATE_WHEN_DISABLED)) {
-							if(args.length>=2) {
-								String name = "";
-								for(int i = 1; i < args.length; i++) {
-									name+=args[i]+" ";
-								}
-								name = name.substring(0, name.length()-1);
-								final String term = name.toLowerCase();
-								List<Song> ss = new ArrayList<>(SongManager.getSongs());
-								ss.sort(new Comparator<Song>() {
-									@Override
-									public int compare(Song o1, Song o2) {
-										return (int) (Tools.similarity(term, o1.getName().toLowerCase())*100-Tools.similarity(term, o2.getName().toLowerCase())*100);
-									}
-								}.reversed());
-								p.sendMessage(Config.getMessage("search-results"));
-								if(!ss.isEmpty()) {
-									for(int i = 0; i < (ss.size() < Config.result_amount?ss.size():Config.result_amount); i++) {
-										Song s = ss.get(i);
-										p.sendMessage(Config.getMessage("search-results-entry").replace("%song-id%", ""+s.getID()).replace("%song-author%", (s.getOriginalAuthor()!=null?s.getOriginalAuthor():Config.default_author)).replace("%song-name%", s.getName()).replace("%song-by%", (s.getAuthor()!=null?s.getAuthor():Config.default_author)));
-									}
-								}else {
-									p.sendMessage(Config.getMessage("search-results-empty"));
-								}
-							}else {
-								sendCommandHelp(p, null);
-							}
-						}else {
-							p.sendMessage(Config.getMessage("creation-disabled"));
-						}
+						
 					}else if(args[0].equalsIgnoreCase("playlist")) {
-						RadioStation r = RadioStations.getRadioStationListening(p);
-						if(r!=null) {
-							p.sendMessage(Config.getMessage("station.playlist").replace("%station-id%", ""+r.getID()).replace("%station-name%", ""+r.getName()).replace("%loop%", ""+r.isLooping()));
-							if(!r.getPlaylist().isEmpty()) {
-								int i = 0;
-								for(Integer e : r.getPlaylist()) {
-									Song s = SongManager.getSongByID(e);
-									if(s!=null) {
-										if(r.getCurrentIndex()>=0 && r.getCurrentIndex()==i && r.isRunning()) {
-											p.sendMessage(Config.getMessage("station.playlist-entry-playing").replace("%index%", ""+i).replace("%song-id%", ""+s.getID()).replace("%song-name%", s.getName()));
-										}else {
-											p.sendMessage(Config.getMessage("station.playlist-entry").replace("%index%", ""+i).replace("%song-id%", ""+s.getID()).replace("%song-name%", s.getName()));
-										}
-									}
-									i++;
-								}
-							}else {
-								p.sendMessage(Config.getMessage("station.playlist-empty").replace("%station-id%", ""+r.getID()).replace("%station-name%", ""+r.getName()));
-							}
-						}else {
-							p.sendMessage(Config.getMessage("not-listening"));
-						}
+						
 					}else if(args[0].equalsIgnoreCase("export")) {
-						if(p.hasPermission(Config.PERM_EXPORT)) {
-							if(args.length==3) {
-								try {
-									String eMode = args[2];
-									SongLoader l = SongManager.getSongLoader(eMode);
-									SongLoader aL = eMode.toLowerCase().endsWith("-archive") ? SongManager.getSongLoader(eMode.substring(0, eMode.length() - "-archive".length())) : null;
-									if(l == null && (aL == null || !aL.supportsSongArchives()) && !eMode.equalsIgnoreCase("settings")) {
-										sendCommandHelp(p, null);
-										return true;
-									}
-									if(args[1].equalsIgnoreCase("all")) {
-										if(p.hasPermission(Config.PERM_EXPORT_ALL)) {
-											if(!exportRunning) {
-												p.sendMessage(Config.getMessage("export.wait-all").replace("%count%", ""+SongManager.getSongs().size()));
-												exportRunning = true;
-												if(SongManager.getSongs().size()>=Config.thread_on_process_when) {
-													tempProcessThread = new Thread(new Runnable() {
-														
-														@Override
-														public void run() {
-															playerExportAll(p, eMode, true);
-															tempProcessThread = null;
-														}
-													}, "PlayerRadios-Process-Thread");
-													tempProcessThread.start();
-												}else {
-													playerExportAll(p, eMode, false);
-												}
-											}else {
-												p.sendMessage(Config.getMessage("process-already-running"));
-											}
-										}else {
-											sendCommandHelp(p, null);
-										}
-									}else {
-										if(eMode.equalsIgnoreCase("sng-archive")){
-											p.sendMessage(Config.getMessage("export.not-available"));
-											return true;
-										}
-										Song s = SongManager.getSongByID(Integer.parseInt(args[1]));
-										if(s == null) {
-											p.sendMessage(Config.getMessage("export.invalid-song"));
-											return true;
-										}
-										try {
-											p.sendMessage(Config.getMessage("export.wait", "song-name", s.getName()));
-											File f = null;
-											if(eMode.equalsIgnoreCase("settings")) {
-												f = SongManager.getConfigFile(s.getID());
-												SongManager.setDefaultSongSettings(s);
-											}else {
-												f = l.getSongExportFile(s);
-												l.saveSongs(f, s);
-											}
-											p.sendMessage(Config.getMessage("export.done").replace("%file-name%", f.getName()));
-										} catch (Exception e) {
-											e.printStackTrace();
-											p.sendMessage(Config.getMessage("export.failed"));
-										}
-									}
-								}catch(NumberFormatException e) {
-									sendCommandHelp(p, null);
-								}
-							}else {
-								sendCommandHelp(p, null);
-							}
-						}else {
-							sendCommandHelp(p, null);
-						}
+						
 					}/*else if(args[0].equalsIgnoreCase("songinfo")) {
 						if(Config.allow_create_stations || p.hasPermission(Config.PERM_CREATE_WHEN_DISABLED)) {
 							if(args.length==2) {
@@ -511,32 +298,9 @@ public class Main extends JavaPlugin {
 					}else if (args[0].equalsIgnoreCase("station")) {
 						if(Config.allow_create_stations || p.hasPermission(Config.PERM_CREATE_WHEN_DISABLED)) {
 							if(args.length>=3 && args[1].equalsIgnoreCase("create")) {
-								String name = "";
-								for(int i = 2; i < args.length; i++) {
-									name+=args[i]+" ";
-								}
-								name = name.substring(0, name.length()-1);
-								if (name.length() <= Config.max_station_name_length) {
-									if(StationManager.getRadioStationsByPlayer(p).size()<Config.max_stations_per_player) {
-										RadioStation r = StationManager.createStation(p, name);
-										p.sendMessage(Config.getMessage("station-created.1", "id", ""+r.getID(), "station-name", r.getName()));
-										p.sendMessage(Config.getMessage("station-created.2", "id", ""+r.getID()));
-									}else {
-										p.sendMessage(Config.getMessage("station.too-many-stations"));
-									}
-								}else {
-									p.sendMessage(Config.getMessage("station.name-too-long"));
-								}
+								
 							}else if(args.length==2 && args[1].equalsIgnoreCase("list")) {
-								p.sendMessage(Config.getMessage("stations"));
-								List<RadioStation> ss = StationManager.getRadioStationsByPlayer(p);
-								if(!ss.isEmpty()) {
-									for(RadioStation r : ss) {
-										p.sendMessage(Config.getMessage("stations-entry", "station-id", ""+r.getID(), "station-name", r.getName()));
-									}
-								}else {
-									p.sendMessage(Config.getMessage("stations-empty"));
-								}
+								
 							}else if (args.length >= 2) {
 								int rsID;
 								try {
@@ -561,31 +325,9 @@ public class Main extends JavaPlugin {
 										if(args.length == 5) {
 											if(!r.isRunning()) {
 												if(args[3].equalsIgnoreCase("add")) {
-													try {
-														int sID = Integer.parseInt(args[4]);
-														Song s = SongManager.getSongByID(sID);
-														if(s!=null) {
-															r.addSong(s.getID());
-															p.sendMessage(Config.getMessage("station.song-added"));
-														}else {
-															p.sendMessage(Config.getMessage("station.song-doesnt-exist"));
-														}
-													}catch(Exception e) {
-														sendCommandHelp(p, "station");
-													}
+													
 												}else if(args[3].equalsIgnoreCase("remove")) {
-													try {
-														int index = Integer.parseInt(args[4]);
-														if(index>=0 && index < r.getPlaylist().size()) {
-															r.removeSong(index);
-															p.sendMessage(Config.getMessage("station.song-removed"));
-															StationManager.updateStationGUI(r.getID());
-														}else {
-															p.sendMessage(Config.getMessage("station.song-not-on-playlist"));
-														}
-													}catch(Exception e) {
-														sendCommandHelp(p, "station");
-													}
+													
 												}else {
 													sendCommandHelp(p, "station");
 												}
@@ -593,23 +335,7 @@ public class Main extends JavaPlugin {
 												p.sendMessage(Config.getMessage("station.cannot-modify"));
 											}
 										}else if(args.length == 3){
-											p.sendMessage(Config.getMessage("station.playlist").replace("%station-id%", ""+r.getID()).replace("%station-name%", ""+r.getName()).replace("%loop%", ""+r.isLooping()));
-											if(!r.getPlaylist().isEmpty()) {
-												int i = 0;
-												for(Integer e : r.getPlaylist()) {
-													Song s = SongManager.getSongByID(e);
-													if(s!=null) {
-														if(r.getCurrentIndex()>=0 && r.getCurrentIndex()==i && r.isRunning()) {
-															p.sendMessage(Config.getMessage("station.playlist-entry-playing").replace("%index%", ""+i).replace("%song-id%", ""+s.getID()).replace("%song-name%", s.getName()));
-														}else {
-															p.sendMessage(Config.getMessage("station.playlist-entry").replace("%index%", ""+i).replace("%song-id%", ""+s.getID()).replace("%song-name%", s.getName()));
-														}
-													}
-													i++;
-												}
-											}else {
-												p.sendMessage(Config.getMessage("station.playlist-empty").replace("%station-id%", ""+r.getID()).replace("%station-name%", ""+r.getName()));
-											}
+											
 										}else {
 											sendCommandHelp(p, "station");
 										}
@@ -696,7 +422,7 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
-	private void sendCommandHelp(CommandSender sender, String topic) {
+	public static void sendCommandHelp(CommandSender sender, String topic) {
 		sender.sendMessage(Config.getMessage("help.header").replace("%topic%", (topic!=null?StringUtils.capitalize(topic):"General")));
 		if(topic == null) {
 			sender.sendMessage(Config.getHelpMessage("pr", "pr", ""));
@@ -746,7 +472,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	private void playerExportAll(Player p, String format, boolean threadMode) {
+	public static void playerExportAll(Player p, String format, boolean threadMode) {
 		long t = System.currentTimeMillis();
 		Map.Entry<Integer, List<Entry<Integer, SongLoadingException>>> r = saveAllSongs(format, threadMode);
 		exportRunning = false;
@@ -760,7 +486,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 	
-	private Map.Entry<Integer, List<Map.Entry<Integer, SongLoadingException>>> saveAllSongs(String format, boolean checkInterrupt) {
+	public static Map.Entry<Integer, List<Map.Entry<Integer, SongLoadingException>>> saveAllSongs(String format, boolean checkInterrupt) {
 		int c = 0;
 		List<Map.Entry<Integer, SongLoadingException>> exs = new ArrayList<>();
 		if(format.equalsIgnoreCase("settings")) {
