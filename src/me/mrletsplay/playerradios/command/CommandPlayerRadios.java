@@ -8,6 +8,7 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.GUIs;
 import me.mrletsplay.playerradios.Main;
+import me.mrletsplay.playerradios.command.force.CommandPlayerRadiosForce;
 import me.mrletsplay.playerradios.command.station.CommandPlayerRadiosStation;
 
 public class CommandPlayerRadios extends BukkitCommand {
@@ -15,6 +16,8 @@ public class CommandPlayerRadios extends BukkitCommand {
 	public CommandPlayerRadios() {
 		super("playerradios");
 		addAlias("pr");
+		setDescription("Opens the PlayerRadios GUI");
+		setUsage("/pr");
 		
 		addSubCommand(new CommandPlayerRadiosVersion());
 		addSubCommand(new CommandPlayerRadiosReload());
@@ -25,6 +28,7 @@ public class CommandPlayerRadios extends BukkitCommand {
 		addSubCommand(new CommandPlayerRadiosPlaylist());
 		addSubCommand(new CommandPlayerRadiosExport());
 		addSubCommand(new CommandPlayerRadiosStation());
+		addSubCommand(new CommandPlayerRadiosForce());
 	}
 	
 	@Override

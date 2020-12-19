@@ -167,5 +167,5 @@ reload-complete: "%prefix% &aReload abgeschlossen"
 creation-disabled: "%prefix% &cDas erstellen von Stationen ist derzeit deaktiviert"
 station-created: 
   1: "%prefix% &aDeine Station (Station &7%id%&a) wurde erstellt"
-  2: "%prefix% &6Nutze &7/pr station %id% &6um deine Station zu verwalten"
+  2: "%prefix% &6Nutze &7/pr station &6um deine Station zu verwalten"
 station-changed: "%prefix% &aDu hörst dir nun &7\"%station-name%\" &aan"

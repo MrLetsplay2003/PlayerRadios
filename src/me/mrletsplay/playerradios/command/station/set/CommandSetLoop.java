@@ -1,4 +1,8 @@
-package me.mrletsplay.playerradios.command.station;
+package me.mrletsplay.playerradios.command.station.set;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -7,18 +11,32 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
+import me.mrletsplay.playerradios.util.Tools;
 
-public class CommandStationPlaylistRemove extends BukkitCommand {
+public class CommandSetLoop extends BukkitCommand {
 	
-	public CommandStationPlaylistRemove() {
-		super("remove");
-		setDescription("Remove a song from your station's playlist");
-		setUsage("/pr station playlist remove <station> <index>");
+	public CommandSetLoop() {
+		super("loop");
+		setDescription("Enable/Disable looping");
+		setUsage("/pr station set loop <station> <true/false>");
 		
-		// TODO: tab complete
+		setTabCompleter((sender, command, label, args) -> {
+			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
+			if(!(s instanceof Player)) return Collections.emptyList();
+			Player p = (Player) s;
+			
+			if(args.length == 0) {
+				return StationManager.getRadioStationsByPlayer(p).stream()
+						.map(r -> String.valueOf(r.getID()))
+						.collect(Collectors.toList());
+			}else if (args.length == 1) {
+				return Arrays.asList("true", "false");
+			}
+			
+			return Collections.emptyList();
+		});
 	}
 	
 	@Override
@@ -44,6 +62,7 @@ public class CommandStationPlaylistRemove extends BukkitCommand {
 		
 		if(!Config.allow_create_stations && !p.hasPermission(Config.PERM_CREATE_WHEN_DISABLED)) {
 			p.sendMessage(Config.getMessage("creation-disabled"));
+			return;
 		}
 		
 		if(args.length != 2) {
@@ -61,23 +80,14 @@ public class CommandStationPlaylistRemove extends BukkitCommand {
 		
 		RadioStation r = StationManager.getRadioStation(rID);
 		
-		if(r.isRunning()) {
-			p.sendMessage(Config.getMessage("station.cannot-modify"));
+		if(!r.isOwner(p) && !p.hasPermission(Config.PERM_EDIT_OTHER)) {
+			p.sendMessage(Config.getMessage("station.not-your-station"));
 			return;
 		}
 		
-		try {
-			int index = Integer.parseInt(args[1]);
-			if(index>=0 && index < r.getPlaylist().size()) {
-				r.removeSong(index);
-				p.sendMessage(Config.getMessage("station.song-removed"));
-				StationManager.updateStationGUI(r.getID());
-			}else {
-				p.sendMessage(Config.getMessage("station.song-not-on-playlist"));
-			}
-		}catch(NumberFormatException e) {
-			Main.sendCommandHelp(p, "station");
-		}
+		boolean bool = Tools.stringToBoolean(args[1]);
+		r.setLoop(bool);
+		p.sendMessage(Config.getMessage(bool ? "station.set.loop.enable" : "station.set.loop.disable"));
 	}
 
 }

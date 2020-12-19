@@ -1,4 +1,8 @@
-package me.mrletsplay.playerradios.command.station;
+package me.mrletsplay.playerradios.command.station.set;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -7,20 +11,27 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
-import me.mrletsplay.playerradios.util.SongManager;
-import me.mrletsplay.playerradios.util.song.Song;
 
-public class CommandStationPlaylistAdd extends BukkitCommand {
+public class CommandSetName extends BukkitCommand {
 	
-	public CommandStationPlaylistAdd() {
-		super("add");
-		setDescription("Add a song to your station's playlist");
-		setUsage("/pr station playlist add <station> <song id>");
+	public CommandSetName() {
+		super("name");
+		setDescription("Change the name of your station");
+		setUsage("/pr station set name <station> <name>");
 		
-		// TODO: tab complete
+		setTabCompleter((sender, command, label, args) -> {
+			if(args.length != 0) return Collections.emptyList();
+			
+			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
+			if(!(s instanceof Player)) return Collections.emptyList();
+			Player p = (Player) s;
+			
+			return StationManager.getRadioStationsByPlayer(p).stream()
+					.map(r -> String.valueOf(r.getID()))
+					.collect(Collectors.toList());
+		});
 	}
 	
 	@Override
@@ -46,9 +57,10 @@ public class CommandStationPlaylistAdd extends BukkitCommand {
 		
 		if(!Config.allow_create_stations && !p.hasPermission(Config.PERM_CREATE_WHEN_DISABLED)) {
 			p.sendMessage(Config.getMessage("creation-disabled"));
+			return;
 		}
 		
-		if(args.length != 2) {
+		if(args.length < 2) {
 			sendCommandInfo(event.getSender());
 			return;
 		}
@@ -63,23 +75,20 @@ public class CommandStationPlaylistAdd extends BukkitCommand {
 		
 		RadioStation r = StationManager.getRadioStation(rID);
 		
-		if(r.isRunning()) {
-			p.sendMessage(Config.getMessage("station.cannot-modify"));
+		if(!r.isOwner(p) && !p.hasPermission(Config.PERM_EDIT_OTHER)) {
+			p.sendMessage(Config.getMessage("station.not-your-station"));
 			return;
 		}
 		
-		try {
-			int sID = Integer.parseInt(args[1]);
-			Song s = SongManager.getSongByID(sID);
-			if(s!=null) {
-				r.addSong(s.getID());
-				p.sendMessage(Config.getMessage("station.song-added"));
-			}else {
-				p.sendMessage(Config.getMessage("station.song-doesnt-exist"));
-			}
-		}catch(NumberFormatException e) {
-			Main.sendCommandHelp(p, "station");
+		String name = Arrays.stream(args).skip(1).collect(Collectors.joining(" "));
+		if(name.length() > Config.max_station_name_length) {
+			p.sendMessage(Config.getMessage("station.name-too-long"));
+			return;
 		}
+		
+		String oName = r.getName();
+		r.setName(name);
+		p.sendMessage(Config.getMessage("station.set.name", "old-name", oName, "new-name", name));
 	}
 
 }

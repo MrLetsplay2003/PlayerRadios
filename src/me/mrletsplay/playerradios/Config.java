@@ -40,7 +40,8 @@ public class Config {
 							   PERM_SUBMIT_WHEN_DISABLED = PERM_BASE+"submit-when-disabled",
 							   PERM_ALLOW_COLOR = PERM_BASE+"color",
 							   PERM_ALLOW_BUGREPORT = PERM_BASE+"allow-bugreport",
-							   PERM_RENAME_WHEN_DISABLED = PERM_BASE+"rename-when-disabled";
+							   PERM_RENAME_WHEN_DISABLED = PERM_BASE+"rename-when-disabled",
+							   PERM_FORCE = PERM_BASE+"force";
 	
 	public static void save(){
 		config.saveToFile();
@@ -76,7 +77,7 @@ public class Config {
 		use_uuids = use_uuids && config.getBoolean("use-uuids", true, true);
 		allow_create_stations = config.getBoolean("enable-user-stations", true, true);
 		enable_particles = config.getBoolean("enable-particles", true, true);
-		use_fixed_playback = config.getBoolean("use-fixed-playback-system", true, true);
+		use_fixed_playback = config.getBoolean("use-fixed-playback-system", false, true);
 		sleep_ticks = config.getInt("sleep-ticks", 50, true);
 		show_automatically_named = config.getBoolean("show-automatically-named", false, true);
 		result_amount = config.getInt("result-amount", 5, true);
@@ -142,7 +143,7 @@ public class Config {
 		c.addDefault("stations-empty", "%prefix% §7You don't own any stations");
 		c.addDefault("station.too-many-stations", "%prefix% §cYou cannot have more than %max-stations% stations");
 		c.addDefault("station-created.1", "%prefix% §aYour station §7\"%station-name%\" §a(Station §7%id%§a) has been created");
-		c.addDefault("station-created.2", "%prefix% §6Use §7/pr station %id% §6to manage your station");
+		c.addDefault("station-created.2", "%prefix% §6Use §7/pr station §6to manage your station");
 		c.addDefault("station.playlist", "%prefix% §7Station \"%station-name%\" (%station-id%)'s Playlist (Looping: %loop%):");
 		c.addDefault("station.playlist-entry", "§6%index%: §7%song-name% (Song ID: %song-id%)");
 		c.addDefault("station.playlist-entry-playing", "§6%index%: §a%song-name% (Song ID: %song-id%)");
@@ -254,6 +255,11 @@ public class Config {
 		c.addDefault("process-already-running", "§cThere's already a process running. Please wait until it's finished");
 		c.addDefault("world-blacklisted", "%prefix% §cPlayerRadios is disabled in this world");
 		c.addDefault("commands-disabled", "%prefix% §cPlayerRadios commands are disabled. Please run /pr to and use the GUI instead");
+		c.addDefault("force.station.changed", "§aPlayer §7%player% §ais now listening to the station §7%station%");
+		c.addDefault("force.station.stopped", "§aStopped the playback for player §7%player%");
+		c.addDefault("force.unknown-player", "§cThat player is not currently online");
+		c.addDefault("force.station.not-running", "§cThat station is currently not running");
+		c.addDefault("force.station.invalid-station", "§cThat station doesn't exist");
 //		c.addDefault("songinfo.song-doesnt-exist", "%prefix% §cThat song doesn't exist");
 //		c.addDefault("songinfo.", "%prefix% §cThat song doesn't exist");
 		

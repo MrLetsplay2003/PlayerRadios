@@ -1,5 +1,8 @@
 package me.mrletsplay.playerradios.command.station;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -10,12 +13,24 @@ import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
 
-public class CommandStationCreate extends BukkitCommand {
+public class CommandStationStop extends BukkitCommand {
 	
-	public CommandStationCreate() {
-		super("create");
-		setDescription("Create a station");
-		setUsage("/pr station create <name>");
+	public CommandStationStop() {
+		super("stop");
+		setDescription("Stops your station");
+		setUsage("/pr station stop <station>");
+		
+		setTabCompleter((sender, command, label, args) -> {
+			if(args.length != 0) return Collections.emptyList();
+			
+			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
+			if(!(s instanceof Player)) return Collections.emptyList();
+			Player p = (Player) s;
+			
+			return StationManager.getRadioStationsByPlayer(p).stream()
+					.map(r -> String.valueOf(r.getID()))
+					.collect(Collectors.toList());
+		});
 	}
 	
 	@Override
@@ -44,25 +59,33 @@ public class CommandStationCreate extends BukkitCommand {
 			return;
 		}
 		
-		if(args.length == 0) {
+		if(args.length != 1) {
 			sendCommandInfo(event.getSender());
 			return;
 		}
 		
-		String name = String.join(" ", args);
-		if(name.length() > Config.max_station_name_length) {
-			p.sendMessage(Config.getMessage("station.name-too-long"));
+		int rID;
+		try {
+			rID = Integer.parseInt(args[0]);
+		}catch (NumberFormatException e) {
+			sendCommandInfo(event.getSender());
 			return;
 		}
 		
-		if(StationManager.getRadioStationsByPlayer(p).size() >= Config.max_stations_per_player) {
-			p.sendMessage(Config.getMessage("station.too-many-stations"));
+		RadioStation r = StationManager.getRadioStation(rID);
+		
+		if(!r.isOwner(p) && !p.hasPermission(Config.PERM_EDIT_OTHER)) {
+			p.sendMessage(Config.getMessage("station.not-your-station"));
 			return;
 		}
 		
-		RadioStation r = StationManager.createStation(p, name);
-		p.sendMessage(Config.getMessage("station-created.1", "id", ""+r.getID(), "station-name", r.getName()));
-		p.sendMessage(Config.getMessage("station-created.2"));
+		if(!r.isRunning()) {
+			p.sendMessage(Config.getMessage("station.not-running"));
+			return;
+		}
+		
+		r.setRunning(false);
+		p.sendMessage(Config.getMessage("station.stopped"));
 	}
 
 }

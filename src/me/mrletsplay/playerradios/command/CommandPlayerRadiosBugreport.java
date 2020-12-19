@@ -21,6 +21,7 @@ public class CommandPlayerRadiosBugreport extends BukkitCommand {
 	public CommandPlayerRadiosBugreport() {
 		super("bugreport");
 		setDescription("Shows the current version of PlayerRadios and checks for an update");
+		setUsage("/pr bugreport");
 	}
 	
 	@Override

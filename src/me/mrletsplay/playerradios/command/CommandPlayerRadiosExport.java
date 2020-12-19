@@ -24,7 +24,7 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 	public CommandPlayerRadiosExport() {
 		super("export");
 		setDescription("Export a song/multiple songs to files");
-		setUsage("/pr export <song id/all> <nbs/opennbs/sng/sng-archive/rsng>");
+		setUsage("/pr export <song id/all> <nbs/opennbs/sng/sng-archive/rsng/settings>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length == 0) {
@@ -35,7 +35,7 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 						.collect(Collectors.toList()));
 				return opts;
 			}else if(args.length == 1) {
-				return Arrays.asList("nbs", "opennbs", "sng", "sng-archive", "rsng");
+				return Arrays.asList("nbs", "opennbs", "sng", "sng-archive", "rsng", "settings");
 			}
 			
 			return Collections.emptyList();

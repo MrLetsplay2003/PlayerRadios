@@ -116,6 +116,7 @@ public class Main extends JavaPlugin {
 				}
 			}, 20, 1);
 		}else {
+			// TODO: fix
 			t = new Thread(new Runnable() {
 				
 				@Override
@@ -340,44 +341,17 @@ public class Main extends JavaPlugin {
 											sendCommandHelp(p, "station");
 										}
 									}else if(args[2].equalsIgnoreCase("start")) {
-										if(!r.isRunning()) {
-											r.setRunning(true);
-											p.sendMessage(Config.getMessage("station.started"));
-										}else {
-											p.sendMessage(Config.getMessage("station.already-running"));
-										}
+										
 									}else if(args[2].equalsIgnoreCase("stop")) {
-										if(r.isRunning()) {
-											r.setRunning(false);
-											p.sendMessage(Config.getMessage("station.stopped"));
-										}else {
-											p.sendMessage(Config.getMessage("station.not-running"));
-										}
+										
 									}else if(args[2].equalsIgnoreCase("set")) {
 										if(args.length>=5) {
 											String setting = args[3];
 											if(setting.equalsIgnoreCase("name")) {
-												String name = "";
-												for(int i = 4; i < args.length; i++) {
-													name+=args[i]+" ";
-												}
-												name = name.substring(0, name.length()-1);
-												if(name.length() <= Config.max_station_name_length) {
-													String oName = r.getName();
-													r.setName(name);
-													p.sendMessage(Config.getMessage("station.set.name").replace("%old-name%", oName).replace("%new-name%", name));
-												}else {
-													p.sendMessage(Config.getMessage("station.name-too-long"));
-												}
+												
 											}else if(setting.equalsIgnoreCase("loop")) {
 												if(args.length==5) {
-													boolean bool = Tools.stringToBoolean(args[4]);
-													r.setLoop(bool);
-													if(bool) {
-														p.sendMessage(Config.getMessage("station.set.loop.enable"));
-													}else {
-														p.sendMessage(Config.getMessage("station.set.loop.disable"));
-													}
+													
 												}else {
 													sendCommandHelp(p, "station");
 												}
@@ -388,15 +362,9 @@ public class Main extends JavaPlugin {
 											sendCommandHelp(p, "station");
 										}
 									}else if(args[2].equalsIgnoreCase("skip")) {
-										if(r.isRunning()) {
-											r.skipTrack();
-											p.sendMessage(Config.getMessage("station.track-skipped"));
-										}else {
-											p.sendMessage(Config.getMessage("station.not-running"));
-										}
+										
 									}else if(args[2].equalsIgnoreCase("delete")) {
-										StationManager.deleteRadioStation(r.getID());
-										p.sendMessage(Config.getMessage("station.deleted").replace("%station-id%", ""+r.getID()).replace("%station-name%", r.getName()));
+										
 									}else {
 										sendCommandHelp(p, "station");
 									}

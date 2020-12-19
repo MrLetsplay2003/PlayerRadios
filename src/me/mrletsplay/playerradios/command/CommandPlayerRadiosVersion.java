@@ -19,6 +19,7 @@ public class CommandPlayerRadiosVersion extends BukkitCommand {
 	public CommandPlayerRadiosVersion() {
 		super("version");
 		setDescription("Shows the current version of PlayerRadios and checks for an update");
+		setUsage("/pr version");
 		addOption(NO_CHECK);
 	}
 	

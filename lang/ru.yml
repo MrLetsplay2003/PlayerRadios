@@ -165,5 +165,5 @@ reload-complete: "%prefix% §aПерезагрузка выполнена"
 creation-disabled: "%prefix% §cСоздание станций в настоящее время отключено"
 station-created: 
   1: "%prefix% §aВаша станция §7\"%station-name%\" §a(ID станции §7%id%§a) создана"
-  2: "%prefix% §6Пишите §7/pr station %id% §6чтобы управлять вашей станцией"
+  2: "%prefix% §6Пишите §7/pr station §6чтобы управлять вашей станцией"
 station-changed: "%prefix% §aСлушаете станцию: §7%station-name%"

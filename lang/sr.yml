@@ -88,7 +88,7 @@ station:
       blacklist: "§8svih osim"
 station-created: 
   1: "%prefix% §aVaša stanica §7\"%station-name%\" §a(Stanica §7%id%§a) je kreirana."
-  2: "%prefix% §6Koristite §7/pr station %id% §6da bi menjali podatke o stanici."
+  2: "%prefix% §6Koristite §7/pr station §6da bi menjali podatke o stanici."
 gui: 
   back: "§cNazad"
   next-page: "§7Sledeća strana"

@@ -143,13 +143,11 @@ public class StationManager {
 	
 	public static void deleteRadioStation(int id) {
 		RadioStation r = getRadioStation(id);
-		if(r!=null) {
-			if(r.isRunning()) {
-				r.stop();
-			}
-			RadioStations.stations.remove(r);
-			stations.set("station."+id, null);
-		}
+		if(r == null) return;
+		
+		if(r.isRunning()) r.stop();
+		RadioStations.stations.remove(r);
+		stations.set("station."+id, null);
 	}
 	
 	private static int newID() {

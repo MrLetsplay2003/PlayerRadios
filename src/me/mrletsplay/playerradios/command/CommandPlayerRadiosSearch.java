@@ -1,8 +1,7 @@
 package me.mrletsplay.playerradios.command;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -12,7 +11,6 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.util.SongManager;
-import me.mrletsplay.playerradios.util.Tools;
 import me.mrletsplay.playerradios.util.song.Song;
 
 public class CommandPlayerRadiosSearch extends BukkitCommand {
@@ -51,16 +49,20 @@ public class CommandPlayerRadiosSearch extends BukkitCommand {
 		
 		String name = String.join(" ", args);
 		final String term = name.toLowerCase();
-		List<Song> ss = new ArrayList<>(SongManager.getSongs());
-		ss.sort(((Comparator<Song>) (o1, o2) -> (int) (Tools.similarity(term, o1.getName().toLowerCase())*100-Tools.similarity(term, o2.getName().toLowerCase())*100)).reversed());
+		List<Song> ss = SongManager.getSongs().stream()
+				.filter(s -> s.getAuthor().toLowerCase().contains(term)
+						|| (s.getName() != null && s.getName().toLowerCase().contains(term))
+						|| (s.getOriginalAuthor() != null && s.getOriginalAuthor().toLowerCase().contains(term)))
+				.collect(Collectors.toList());
 		p.sendMessage(Config.getMessage("search-results"));
-		if(!ss.isEmpty()) {
-			for(int i = 0; i < (ss.size() < Config.result_amount?ss.size():Config.result_amount); i++) {
-				Song s = ss.get(i);
-				p.sendMessage(Config.getMessage("search-results-entry").replace("%song-id%", ""+s.getID()).replace("%song-author%", (s.getOriginalAuthor()!=null?s.getOriginalAuthor():Config.default_author)).replace("%song-name%", s.getName()).replace("%song-by%", (s.getAuthor()!=null?s.getAuthor():Config.default_author)));
-			}
-		}else {
+		if(ss.isEmpty()) {
 			p.sendMessage(Config.getMessage("search-results-empty"));
+			return;
+		}
+		
+		for(int i = 0; i < (ss.size() < Config.result_amount?ss.size():Config.result_amount); i++) {
+			Song s = ss.get(i);
+			p.sendMessage(Config.getMessage("search-results-entry").replace("%song-id%", ""+s.getID()).replace("%song-author%", (s.getOriginalAuthor()!=null?s.getOriginalAuthor():Config.default_author)).replace("%song-name%", s.getName()).replace("%song-by%", (s.getAuthor()!=null?s.getAuthor():Config.default_author)));
 		}
 	}
 

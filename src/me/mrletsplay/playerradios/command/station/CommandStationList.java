@@ -17,6 +17,7 @@ public class CommandStationList extends BukkitCommand {
 	public CommandStationList() {
 		super("list");
 		setDescription("Lists your stations");
+		setUsage("/pr station list");
 	}
 	
 	@Override
@@ -41,6 +42,7 @@ public class CommandStationList extends BukkitCommand {
 		
 		if(!Config.allow_create_stations && !p.hasPermission(Config.PERM_CREATE_WHEN_DISABLED)) {
 			p.sendMessage(Config.getMessage("creation-disabled"));
+			return;
 		}
 		
 		p.sendMessage(Config.getMessage("stations"));

@@ -22,7 +22,7 @@ public class CommandPlayerRadiosSubmit extends BukkitCommand {
 	
 	public CommandPlayerRadiosSubmit() {
 		super("submit");
-		setDescription("Downloads an nbs file from a URL and adds it to the library");
+		setDescription("Downloads a song file from a URL and adds it to the library");
 		setUsage("/pr submit <URL>");
 	}
 	
