@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.NMSVersion;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.Main;
+import me.mrletsplay.playerradios.PlayerManager;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.song.Layer;
 import me.mrletsplay.playerradios.util.song.Note;
@@ -283,10 +284,12 @@ public class RadioStation {
 					if(n.getVolume() > 0) vol = n.getVolume();
 					if((!n.isCustom() && n.getSound()!=null) || (n.isCustom() && n.getCustomSound()!=null)) {
 						for(Player p : players) {
+							int playerVolume = PlayerManager.getVolume(p);
+							float pVol = (float) Math.pow(2, playerVolume / 100f * playerVolume / 100f) - 1;
 							if(!n.isCustom()) {
-								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getSound().getBukkitSound(), vol / 10f, NotePitch.getPitch(n.getNote()));
+								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getSound().getBukkitSound(), vol / 10f * pVol, NotePitch.getPitch(n.getNote()));
 							}else {
-								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getCustomSound(), vol / 10f, NotePitch.getPitch(n.getNote()));
+								p.playSound(p.getLocation().add(p.getLocation().getDirection().normalize()), n.getCustomSound(), vol / 10f * pVol, NotePitch.getPitch(n.getNote()));
 							}
 							
 							if(Config.enable_particles) {

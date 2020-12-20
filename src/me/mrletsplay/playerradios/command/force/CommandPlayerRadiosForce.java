@@ -9,6 +9,7 @@ public class CommandPlayerRadiosForce extends BukkitCommand {
 		super("force");
 		
 		addSubCommand(new CommandForceStation());
+		addSubCommand(new CommandForceVolume());
 	}
 	
 	@Override

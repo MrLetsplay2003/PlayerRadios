@@ -210,6 +210,8 @@ public class Config {
 		c.addDefault("gui.all-stations", "§7All stations");
 		c.addDefault("gui.your-stations", "§7Your stations");
 		c.addDefault("gui.stop-listening", "§cStop listening");
+		c.addDefault("gui.increase-volume", "§7Volume +");
+		c.addDefault("gui.decrease-volume", "§7Volume -");
 		c.addDefault("gui.about-station.online", "§aCurrently broadcasting");
 		c.addDefault("gui.about-station.offline", "§cCurrently offline");
 		c.addDefault("gui.about-station.playing", "§7Currently playing: %song-name%");
@@ -255,11 +257,14 @@ public class Config {
 		c.addDefault("process-already-running", "§cThere's already a process running. Please wait until it's finished");
 		c.addDefault("world-blacklisted", "%prefix% §cPlayerRadios is disabled in this world");
 		c.addDefault("commands-disabled", "%prefix% §cPlayerRadios commands are disabled. Please run /pr to and use the GUI instead");
-		c.addDefault("force.station.changed", "§aPlayer §7%player% §ais now listening to the station §7%station%");
-		c.addDefault("force.station.stopped", "§aStopped the playback for player §7%player%");
-		c.addDefault("force.unknown-player", "§cThat player is not currently online");
-		c.addDefault("force.station.not-running", "§cThat station is currently not running");
-		c.addDefault("force.station.invalid-station", "§cThat station doesn't exist");
+		c.addDefault("force.station.changed", "%prefix% §aPlayer §7%player% §ais now listening to the station §7%station%");
+		c.addDefault("force.station.stopped", "%prefix% §aStopped the playback for player §7%player%");
+		c.addDefault("force.unknown-player", "%prefix% §cThat player is not currently online");
+		c.addDefault("force.station.not-running", "%prefix% §cThat station is currently not running");
+		c.addDefault("force.station.invalid-station", "%prefix% §cThat station doesn't exist");
+		c.addDefault("force.volume.changed", "%prefix% §7%player%§a's volume is now at §7%volume%%");
+		c.addDefault("force.volume.invalid-volume", "%prefix% §cThe volume needs to be in the range 0 - 100");
+		c.addDefault("volume-changed", "%prefix% §aYour volume is now at §7%volume%%");
 //		c.addDefault("songinfo.song-doesnt-exist", "%prefix% §cThat song doesn't exist");
 //		c.addDefault("songinfo.", "%prefix% §cThat song doesn't exist");
 		

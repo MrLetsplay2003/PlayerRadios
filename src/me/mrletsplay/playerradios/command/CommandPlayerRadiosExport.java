@@ -1,11 +1,8 @@
 package me.mrletsplay.playerradios.command;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,12 +25,7 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length == 0) {
-				List<String> opts = new ArrayList<>();
-				opts.add("all");
-				opts.addAll(SongManager.getSongs().stream()
-						.map(s -> String.valueOf(s.getID()))
-						.collect(Collectors.toList()));
-				return opts;
+				return Arrays.asList("all");
 			}else if(args.length == 1) {
 				return Arrays.asList("nbs", "opennbs", "sng", "sng-archive", "rsng", "settings");
 			}

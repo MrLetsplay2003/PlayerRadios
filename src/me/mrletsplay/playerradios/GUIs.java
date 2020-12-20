@@ -175,6 +175,18 @@ public class GUIs {
 			}
 		}));
 		
+		
+		// TODO: vol
+		builder.addElement(46, new StaticGUIElement(ItemUtils.createItem(ItemUtils.plus(VersionedDyeColor.WHITE), Config.getMessage("gui.increase-volume"))).setAction(event -> {
+			int newV = PlayerManager.setVolume(event.getPlayer(), PlayerManager.getVolume(event.getPlayer()) + 5);
+			event.getPlayer().sendMessage(Config.getMessage("volume-changed", "volume", ""+newV));
+		}));
+		
+		builder.addElement(47, new StaticGUIElement(ItemUtils.createItem(Tools.minus(VersionedDyeColor.WHITE), Config.getMessage("gui.decrease-volume"))).setAction(event -> {
+			int newV = PlayerManager.setVolume(event.getPlayer(), PlayerManager.getVolume(event.getPlayer()) - 5);
+			event.getPlayer().sendMessage(Config.getMessage("volume-changed", "volume", ""+newV));
+		}));
+		
 		builder.addElement(50, new StaticGUIElement(ItemUtils.createItem(VersionedMaterial.GREEN_BANNER, 1, Config.getMessage("gui.all-stations"))).setAction(new GUIElementAction() {
 			
 			@Override

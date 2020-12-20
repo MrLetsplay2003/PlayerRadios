@@ -32,10 +32,6 @@ public class CommandPlaylistAdd extends BukkitCommand {
 				return StationManager.getRadioStationsByPlayer(p).stream()
 						.map(r -> String.valueOf(r.getID()))
 						.collect(Collectors.toList());
-			}else if (args.length == 1) {
-				return SongManager.getSongs().stream()
-						.map(song -> String.valueOf(song.getID()))
-						.collect(Collectors.toList());
 			}
 			
 			return Collections.emptyList();

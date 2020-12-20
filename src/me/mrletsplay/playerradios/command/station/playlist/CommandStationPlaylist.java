@@ -1,5 +1,8 @@
 package me.mrletsplay.playerradios.command.station.playlist;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,6 +24,20 @@ public class CommandStationPlaylist extends BukkitCommand {
 
 		addSubCommand(new CommandPlaylistAdd());
 		addSubCommand(new CommandPlaylistRemove());
+		
+		setTabCompleter((sender, command, label, args) -> {
+			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
+			if(!(s instanceof Player)) return Collections.emptyList();
+			Player p = (Player) s;
+			
+			if(args.length == 0) {
+				return StationManager.getRadioStationsByPlayer(p).stream()
+						.map(r -> String.valueOf(r.getID()))
+						.collect(Collectors.toList());
+			}
+			
+			return Collections.emptyList();
+		});
 	}
 	
 	@Override

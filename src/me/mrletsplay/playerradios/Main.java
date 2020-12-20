@@ -390,6 +390,7 @@ public class Main extends JavaPlugin {
 		return true;
 	}
 
+	// TODO: replace
 	public static void sendCommandHelp(CommandSender sender, String topic) {
 		sender.sendMessage(Config.getMessage("help.header").replace("%topic%", (topic!=null?StringUtils.capitalize(topic):"General")));
 		if(topic == null) {

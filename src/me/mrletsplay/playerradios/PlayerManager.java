@@ -59,4 +59,15 @@ public class PlayerManager {
 		return pls.getInt((Config.use_uuids?p.getUniqueId().toString():p.getName())+".lastListened", -1, false);
 	}
 	
+	public static int setVolume(Player p, int volume) {
+		int v = Math.max(Math.min(volume, 100), 0);
+		pls.set((Config.use_uuids?p.getUniqueId().toString():p.getName())+".volume", v);
+		save();
+		return v;
+	}
+	
+	public static int getVolume(Player p) {
+		return pls.getInt((Config.use_uuids?p.getUniqueId().toString():p.getName())+".volume", 100, false);
+	}
+	
 }
