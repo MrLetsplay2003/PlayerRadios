@@ -19,7 +19,7 @@ public class CommandSetName extends BukkitCommand {
 	public CommandSetName() {
 		super("name");
 		setDescription("Change the name of your station");
-		setUsage("/pr station set name <station> <name>");
+		setUsage("/playerradios station set name <station> <name>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length != 0) return Collections.emptyList();

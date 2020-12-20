@@ -15,7 +15,7 @@ public class CommandPlayerRadiosReload extends BukkitCommand {
 		super("reload");
 		addAlias("rl");
 		setDescription("Reloads PlayerRadios");
-		setUsage("/pr reload");
+		setUsage("/playerradios reload");
 	}
 	
 	@Override
@@ -23,7 +23,7 @@ public class CommandPlayerRadiosReload extends BukkitCommand {
 		CommandSender sender = ((BukkitCommandSender) event.getSender()).getBukkitSender();
 		
 		if(!sender.hasPermission(Config.PERM_RELOAD)) {
-			Main.sendCommandHelp(sender, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
 		

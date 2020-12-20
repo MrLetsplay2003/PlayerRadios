@@ -18,7 +18,7 @@ public class CommandStationSkip extends BukkitCommand {
 	public CommandStationSkip() {
 		super("skip");
 		setDescription("Skips the song that's currently playing");
-		setUsage("/pr station skip <station>");
+		setUsage("/playerradios station skip <station>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length != 0) return Collections.emptyList();

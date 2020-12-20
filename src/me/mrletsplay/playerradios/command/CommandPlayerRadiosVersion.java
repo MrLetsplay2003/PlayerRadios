@@ -19,7 +19,7 @@ public class CommandPlayerRadiosVersion extends BukkitCommand {
 	public CommandPlayerRadiosVersion() {
 		super("version");
 		setDescription("Shows the current version of PlayerRadios and checks for an update");
-		setUsage("/pr version");
+		setUsage("/playerradios version");
 		addOption(NO_CHECK);
 	}
 	
@@ -34,7 +34,7 @@ public class CommandPlayerRadiosVersion extends BukkitCommand {
 		Player p = (Player) sender;
 		
 		if (!p.hasPermission(Config.PERM_NOTIFY_UPDATE)) {
-			Main.sendCommandHelp(p, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
 		

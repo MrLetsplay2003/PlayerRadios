@@ -21,7 +21,7 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 	public CommandPlayerRadiosExport() {
 		super("export");
 		setDescription("Export a song/multiple songs to files");
-		setUsage("/pr export <song id/all> <nbs/opennbs/sng/sng-archive/rsng/settings>");
+		setUsage("/playerradios export <song id/all> <nbs/opennbs/sng/sng-archive/rsng/settings>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length == 0) {
@@ -51,7 +51,8 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 		}
 		
 		if(!p.hasPermission(Config.PERM_EXPORT)) {
-			Main.sendCommandHelp(p, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
+			return;
 		}
 		
 		if(args.length != 2) {
@@ -70,28 +71,29 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 			}
 			
 			if(args[0].equalsIgnoreCase("all")) {
-				if(p.hasPermission(Config.PERM_EXPORT_ALL)) {
-					if(!Main.exportRunning) {
-						p.sendMessage(Config.getMessage("export.wait-all").replace("%count%", ""+SongManager.getSongs().size()));
-						Main.exportRunning = true;
-						if(SongManager.getSongs().size()>=Config.thread_on_process_when) {
-							Main.tempProcessThread = new Thread(new Runnable() {
-								
-								@Override
-								public void run() {
-									Main.playerExportAll(p, eMode, true);
-									Main.tempProcessThread = null;
-								}
-							}, "PlayerRadios-Process-Thread");
-							Main.tempProcessThread.start();
-						}else {
-							Main.playerExportAll(p, eMode, false);
-						}
+				if(!p.hasPermission(Config.PERM_EXPORT_ALL)) {
+					sender.sendMessage(Config.getMessage("no-permission"));
+					return;
+				}
+				
+				if(!Main.exportRunning) {
+					p.sendMessage(Config.getMessage("export.wait-all").replace("%count%", ""+SongManager.getSongs().size()));
+					Main.exportRunning = true;
+					if(SongManager.getSongs().size()>=Config.thread_on_process_when) {
+						Main.tempProcessThread = new Thread(new Runnable() {
+							
+							@Override
+							public void run() {
+								Main.playerExportAll(p, eMode, true);
+								Main.tempProcessThread = null;
+							}
+						}, "PlayerRadios-Process-Thread");
+						Main.tempProcessThread.start();
 					}else {
-						p.sendMessage(Config.getMessage("process-already-running"));
+						Main.playerExportAll(p, eMode, false);
 					}
 				}else {
-					Main.sendCommandHelp(p, null);
+					p.sendMessage(Config.getMessage("process-already-running"));
 				}
 			}else {
 				if(eMode.equalsIgnoreCase("sng-archive")){
@@ -120,7 +122,7 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 				}
 			}
 		}catch(NumberFormatException e) {
-			Main.sendCommandHelp(p, null);
+			sendCommandInfo(event.getSender());
 		}
 	}
 

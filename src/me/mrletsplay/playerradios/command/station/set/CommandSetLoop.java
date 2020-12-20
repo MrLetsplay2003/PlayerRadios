@@ -20,7 +20,7 @@ public class CommandSetLoop extends BukkitCommand {
 	public CommandSetLoop() {
 		super("loop");
 		setDescription("Enable/Disable looping");
-		setUsage("/pr station set loop <station> <true/false>");
+		setUsage("/playerradios station set loop <station> <true/false>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();

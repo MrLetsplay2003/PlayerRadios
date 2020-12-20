@@ -18,7 +18,7 @@ public class CommandPlayerRadiosSearch extends BukkitCommand {
 	public CommandPlayerRadiosSearch() {
 		super("search");
 		setDescription("Searches through the library of songs");
-		setUsage("/pr search <query>");
+		setUsage("/playerradios search <query>");
 	}
 	
 	@Override

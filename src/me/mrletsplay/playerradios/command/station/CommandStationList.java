@@ -17,7 +17,7 @@ public class CommandStationList extends BukkitCommand {
 	public CommandStationList() {
 		super("list");
 		setDescription("Lists your stations");
-		setUsage("/pr station list");
+		setUsage("/playerradios station list");
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ public class CommandStationStop extends BukkitCommand {
 	public CommandStationStop() {
 		super("stop");
 		setDescription("Stops your station");
-		setUsage("/pr station stop <station>");
+		setUsage("/playerradios station stop <station>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length != 0) return Collections.emptyList();

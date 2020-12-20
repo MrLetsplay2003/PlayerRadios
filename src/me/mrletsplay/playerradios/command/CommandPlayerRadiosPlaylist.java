@@ -17,7 +17,7 @@ public class CommandPlayerRadiosPlaylist extends BukkitCommand {
 	public CommandPlayerRadiosPlaylist() {
 		super("playlist");
 		setDescription("Shows the playlist of the station you're currently listening to");
-		setUsage("/pr playlist");
+		setUsage("/playerradios playlist");
 	}
 	
 	@Override

@@ -15,7 +15,7 @@ public class CommandStationCreate extends BukkitCommand {
 	public CommandStationCreate() {
 		super("create");
 		setDescription("Create a station");
-		setUsage("/pr station create <name>");
+		setUsage("/playerradios station create <name>");
 	}
 	
 	@Override

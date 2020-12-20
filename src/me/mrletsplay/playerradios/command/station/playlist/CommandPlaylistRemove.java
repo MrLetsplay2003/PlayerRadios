@@ -10,7 +10,6 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
 
@@ -19,7 +18,7 @@ public class CommandPlaylistRemove extends BukkitCommand {
 	public CommandPlaylistRemove() {
 		super("remove");
 		setDescription("Remove a song from your station's playlist");
-		setUsage("/pr station playlist remove <station> <index>");
+		setUsage("/playerradios station playlist remove <station> <index>");
 
 		setTabCompleter((sender, command, label, args) -> {
 			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
@@ -97,7 +96,7 @@ public class CommandPlaylistRemove extends BukkitCommand {
 				p.sendMessage(Config.getMessage("station.song-not-on-playlist"));
 			}
 		}catch(NumberFormatException e) {
-			Main.sendCommandHelp(p, "station");
+			sendCommandInfo(event.getSender());
 		}
 	}
 

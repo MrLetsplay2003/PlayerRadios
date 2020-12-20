@@ -12,7 +12,6 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.PasteText;
 
@@ -21,7 +20,7 @@ public class CommandPlayerRadiosBugreport extends BukkitCommand {
 	public CommandPlayerRadiosBugreport() {
 		super("bugreport");
 		setDescription("Shows the current version of PlayerRadios and checks for an update");
-		setUsage("/pr bugreport");
+		setUsage("/playerradios bugreport");
 	}
 	
 	@Override
@@ -35,7 +34,7 @@ public class CommandPlayerRadiosBugreport extends BukkitCommand {
 		Player p = (Player) sender;
 		
 		if(!p.hasPermission(Config.PERM_ALLOW_BUGREPORT)) {
-			Main.sendCommandHelp(p, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
 		

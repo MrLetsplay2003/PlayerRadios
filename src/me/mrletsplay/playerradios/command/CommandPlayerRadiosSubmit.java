@@ -23,7 +23,7 @@ public class CommandPlayerRadiosSubmit extends BukkitCommand {
 	public CommandPlayerRadiosSubmit() {
 		super("submit");
 		setDescription("Downloads a song file from a URL and adds it to the library");
-		setUsage("/pr submit <URL>");
+		setUsage("/playerradios submit <URL>");
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class CommandPlayerRadiosSubmit extends BukkitCommand {
 		}
 		
 		if((!Config.enable_submit && !sender.hasPermission(Config.PERM_SUBMIT_WHEN_DISABLED)) || (Config.submit_needs_perm && !sender.hasPermission(Config.PERM_SUBMIT))) {
-			Main.sendCommandHelp(p, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
 		

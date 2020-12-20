@@ -20,7 +20,7 @@ public class CommandStationPlaylist extends BukkitCommand {
 	public CommandStationPlaylist() {
 		super("playlist");
 		setDescription("Show or modify your station's playlist");
-		setUsage("/pr station playlist <station>");
+		setUsage("/playerradios station playlist <station>");
 
 		addSubCommand(new CommandPlaylistAdd());
 		addSubCommand(new CommandPlaylistRemove());

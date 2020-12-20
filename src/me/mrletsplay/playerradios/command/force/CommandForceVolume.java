@@ -12,7 +12,6 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.PlayerManager;
 
 public class CommandForceVolume extends BukkitCommand {
@@ -20,7 +19,7 @@ public class CommandForceVolume extends BukkitCommand {
 	public CommandForceVolume() {
 		super("volume");
 		setDescription("Changes a player's volume");
-		setUsage("/pr force volume <volume>");
+		setUsage("/playerradios force volume <volume>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length == 0) {
@@ -41,7 +40,7 @@ public class CommandForceVolume extends BukkitCommand {
 		String[] args = event.getArguments();
 		
 		if(!sender.hasPermission(Config.PERM_FORCE)) {
-			Main.sendCommandHelp(sender, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
 		

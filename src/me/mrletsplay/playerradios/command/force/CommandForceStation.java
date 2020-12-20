@@ -13,7 +13,6 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
 
@@ -22,7 +21,7 @@ public class CommandForceStation extends BukkitCommand {
 	public CommandForceStation() {
 		super("station");
 		setDescription("Forces a player to listen to a specific station");
-		setUsage("/pr force station <station/none>");
+		setUsage("/playerradios force station <station/none>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length == 0) {
@@ -47,7 +46,7 @@ public class CommandForceStation extends BukkitCommand {
 		String[] args = event.getArguments();
 		
 		if(!sender.hasPermission(Config.PERM_FORCE)) {
-			Main.sendCommandHelp(sender, null);
+			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
 		

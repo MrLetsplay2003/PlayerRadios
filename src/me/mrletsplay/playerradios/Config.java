@@ -265,6 +265,7 @@ public class Config {
 		c.addDefault("force.volume.changed", "%prefix% §7%player%§a's volume is now at §7%volume%%");
 		c.addDefault("force.volume.invalid-volume", "%prefix% §cThe volume needs to be in the range 0 - 100");
 		c.addDefault("volume-changed", "%prefix% §aYour volume is now at §7%volume%%");
+		c.addDefault("no-permission", "%prefix% §cYou don't have permission to use that command");
 //		c.addDefault("songinfo.song-doesnt-exist", "%prefix% §cThat song doesn't exist");
 //		c.addDefault("songinfo.", "%prefix% §cThat song doesn't exist");
 		
@@ -273,30 +274,6 @@ public class Config {
 		c.addDefault("placeholderapi.listening.time.none", "-");
 		c.addDefault("placeholderapi.listening.song.none", "None");
 		c.addDefault("placeholderapi.listening.song.format", "%original-author% - %song-name% (by %author%) | %song-id%");
-		
-		c.addDefault("help.header", "%prefix% §8| §7Help §8| §7%topic%");
-		c.addDefault("help.layout", "§7§l/%command%%args% §r§8- %description%");
-		c.addDefault("help.use-topic-stations", "§7Use §7§l/pr help stations §r§7for help about stations");
-		c.addDefault("help.invalid-topic", "§7There's no help available for \"%topic%\"");
-		c.addDefault("help.pr", "Opens the station selection GUI");
-		c.addDefault("help.pr-help", "Shows the command help (about a specific topic)");
-		c.addDefault("help.pr-playlist", "Shows the playlist of the station you're currently listening to");
-		c.addDefault("help.pr-version", "Shows the current PlayerRadios version and checks for an update (if enabled)");
-		c.addDefault("help.pr-export", "Exports a song to the specified format/Exports the song settings");
-		c.addDefault("help.pr-reload", "Reloads PlayerRadios");
-		c.addDefault("help.pr-submit", "Submit/Upload a song to the server's song library");
-		c.addDefault("help.pr-search", "Search for a song");
-		c.addDefault("help.pr-bugreport", "Create a bug report");
-		c.addDefault("help.pr-station-create", "Create a station");
-		c.addDefault("help.pr-station-list", "Lists all your stations");
-		c.addDefault("help.pr-station", "Opens the station's management GUI");
-		c.addDefault("help.pr-station-playlist", "Shows a station's playlist");
-		c.addDefault("help.pr-station-playlist-add", "Add a song to a station's playlist");
-		c.addDefault("help.pr-station-playlist-remove", "Remove a song from a station's playlist");
-		c.addDefault("help.pr-station-set", "Change a station's setting");
-		c.addDefault("help.pr-station-start-stop", "Start/Stop a station");
-		c.addDefault("help.pr-station-skip", "Skip to the next track in a station's playlist");
-		c.addDefault("help.pr-station-delete", "Delete a station");
 		
 		c.applyDefaults();
 		c.saveToFile();

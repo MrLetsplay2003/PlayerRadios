@@ -18,7 +18,7 @@ public class CommandStationDelete extends BukkitCommand {
 	public CommandStationDelete() {
 		super("delete");
 		setDescription("Deletes your station");
-		setUsage("/pr station delete <station>");
+		setUsage("/playerradios station delete <station>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			if(args.length != 0) return Collections.emptyList();

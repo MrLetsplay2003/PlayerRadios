@@ -7,17 +7,18 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.GUIs;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.command.force.CommandPlayerRadiosForce;
 import me.mrletsplay.playerradios.command.station.CommandPlayerRadiosStation;
 
 public class CommandPlayerRadios extends BukkitCommand {
+	
+	public static final CommandPlayerRadios INSTANCE = new CommandPlayerRadios();
 
 	public CommandPlayerRadios() {
 		super("playerradios");
 		addAlias("pr");
 		setDescription("Opens the PlayerRadios GUI");
-		setUsage("/pr");
+		setUsage("/playerradios");
 		
 		addSubCommand(new CommandPlayerRadiosVersion());
 		addSubCommand(new CommandPlayerRadiosReload());
@@ -43,7 +44,7 @@ public class CommandPlayerRadios extends BukkitCommand {
 		String[] args = event.getArguments();
 		
 		if(args.length != 0) {
-			Main.sendCommandHelp(p, null);
+			sendCommandInfo(event.getSender());
 			return;
 		}
 		

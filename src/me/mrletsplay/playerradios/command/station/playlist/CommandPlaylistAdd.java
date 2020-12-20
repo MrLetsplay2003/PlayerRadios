@@ -10,7 +10,6 @@ import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
 import me.mrletsplay.mrcore.command.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
-import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
 import me.mrletsplay.playerradios.util.SongManager;
@@ -21,7 +20,7 @@ public class CommandPlaylistAdd extends BukkitCommand {
 	public CommandPlaylistAdd() {
 		super("add");
 		setDescription("Add a song to your station's playlist");
-		setUsage("/pr station playlist add <station> <song id>");
+		setUsage("/playerradios station playlist add <station> <song id>");
 		
 		setTabCompleter((sender, command, label, args) -> {
 			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
@@ -99,7 +98,7 @@ public class CommandPlaylistAdd extends BukkitCommand {
 				p.sendMessage(Config.getMessage("station.song-doesnt-exist"));
 			}
 		}catch(NumberFormatException e) {
-			Main.sendCommandHelp(p, "station");
+			sendCommandInfo(event.getSender());
 		}
 	}
 
