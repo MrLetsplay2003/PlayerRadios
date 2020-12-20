@@ -1,13 +1,14 @@
 package me.mrletsplay.playerradios.util;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.mrletsplay.playerradios.Config;
+import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.util.song.Song;
 
-public class PlayerRadiosPlaceholder extends PlaceholderHook {
+public class PlayerRadiosPlaceholder extends PlaceholderExpansion {
 
 	@Override
 	public String onPlaceholderRequest(Player p, String ident) {
@@ -36,9 +37,22 @@ public class PlayerRadiosPlaceholder extends PlaceholderHook {
 	}
 
 	public static void hook() {
-		PlaceholderAPI.registerPlaceholderHook("playerradios", new PlayerRadiosPlaceholder());
+		new PlayerRadiosPlaceholder().register();
 	}
 
-	
-	
+	@Override
+	public @NotNull String getAuthor() {
+		return "MrLetsplay2003";
+	}
+
+	@Override
+	public @NotNull String getIdentifier() {
+		return "playerradios";
+	}
+
+	@Override
+	public @NotNull String getVersion() {
+		return Main.pluginVersion;
+	}
+
 }
