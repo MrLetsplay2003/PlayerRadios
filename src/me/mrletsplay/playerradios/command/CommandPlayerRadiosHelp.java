@@ -1,7 +1,7 @@
 package me.mrletsplay.playerradios.command;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 
 public class CommandPlayerRadiosHelp extends BukkitCommand {
 	

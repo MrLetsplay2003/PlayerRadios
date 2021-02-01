@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
@@ -25,12 +25,12 @@ public class CommandStationPlaylist extends BukkitCommand {
 		addSubCommand(new CommandPlaylistAdd());
 		addSubCommand(new CommandPlaylistRemove());
 		
-		setTabCompleter((sender, command, label, args) -> {
-			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
+		setTabCompleter(event -> {
+			CommandSender s = ((BukkitCommandSender) event.getSender()).getBukkitSender();
 			if(!(s instanceof Player)) return Collections.emptyList();
 			Player p = (Player) s;
 			
-			if(args.length == 0) {
+			if(event.getArgs().length == 0) {
 				return StationManager.getRadioStationsByPlayer(p).stream()
 						.map(r -> String.valueOf(r.getID()))
 						.collect(Collectors.toList());

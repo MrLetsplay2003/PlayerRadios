@@ -1,7 +1,7 @@
 package me.mrletsplay.playerradios.command.station.set;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 
 public class CommandStationSet extends BukkitCommand {
 	

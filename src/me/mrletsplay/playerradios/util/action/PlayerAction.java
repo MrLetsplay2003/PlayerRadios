@@ -4,13 +4,7 @@ public abstract class PlayerAction {
 
 	protected CancelTask cancelTask;
 	
-	public PlayerAction(CancelTask cancelTask) {
-		this.cancelTask = cancelTask;
-	}
-	
-	public PlayerAction() {
-		
-	}
+	public PlayerAction() {}
 	
 	public CancelTask getCancelTask() {
 		return cancelTask;

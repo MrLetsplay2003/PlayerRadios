@@ -15,6 +15,8 @@ public class PlayerRenameStationAction extends PlayerAction {
 			cancelTask = new CancelTask(p);
 			cancelTask.schedule(Config.max_type_time * 20);
 		}
+		
+		this.stationID = stationID;
 	}
 	
 	public int getStationID() {

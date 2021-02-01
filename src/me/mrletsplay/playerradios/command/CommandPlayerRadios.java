@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 import me.mrletsplay.playerradios.GUIs;
 import me.mrletsplay.playerradios.command.force.CommandPlayerRadiosForce;
 import me.mrletsplay.playerradios.command.station.CommandPlayerRadiosStation;

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
@@ -21,10 +21,10 @@ public class CommandSetName extends BukkitCommand {
 		setDescription("Change the name of your station");
 		setUsage("/playerradios station set name <station> <name>");
 		
-		setTabCompleter((sender, command, label, args) -> {
-			if(args.length != 0) return Collections.emptyList();
+		setTabCompleter(event -> {
+			if(event.getArgs().length != 0) return Collections.emptyList();
 			
-			CommandSender s = ((BukkitCommandSender) sender).getBukkitSender();
+			CommandSender s = ((BukkitCommandSender) event.getSender()).getBukkitSender();
 			if(!(s instanceof Player)) return Collections.emptyList();
 			Player p = (Player) s;
 			

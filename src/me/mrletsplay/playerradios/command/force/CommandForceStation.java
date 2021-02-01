@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.RadioStation;
@@ -23,12 +23,12 @@ public class CommandForceStation extends BukkitCommand {
 		setDescription("Forces a player to listen to a specific station");
 		setUsage("/playerradios force station <station/none>");
 		
-		setTabCompleter((sender, command, label, args) -> {
-			if(args.length == 0) {
+		setTabCompleter(event -> {
+			if(event.getArgs().length == 0) {
 				return Bukkit.getOnlinePlayers().stream()
 						.map(pl -> pl.getName())
 						.collect(Collectors.toList());
-			}else if (args.length == 1) {
+			}else if (event.getArgs().length == 1) {
 				List<String> ids = StationManager.getRadioIDs().stream()
 						.map(String::valueOf)
 						.collect(Collectors.toCollection(ArrayList::new));

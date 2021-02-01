@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.PasteText;

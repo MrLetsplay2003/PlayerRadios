@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommand;
 import me.mrletsplay.mrcore.bukkitimpl.command.BukkitCommandSender;
-import me.mrletsplay.mrcore.command.CommandInvokedEvent;
+import me.mrletsplay.mrcore.command.event.CommandInvokedEvent;
 import me.mrletsplay.playerradios.Config;
 import me.mrletsplay.playerradios.Main;
 import me.mrletsplay.playerradios.util.SongManager;
@@ -23,10 +23,10 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 		setDescription("Export a song/multiple songs to files");
 		setUsage("/playerradios export <song id/all> <nbs/opennbs/sng/sng-archive/rsng/settings>");
 		
-		setTabCompleter((sender, command, label, args) -> {
-			if(args.length == 0) {
+		setTabCompleter(event -> {
+			if(event.getArgs().length == 0) {
 				return Arrays.asList("all");
-			}else if(args.length == 1) {
+			}else if(event.getArgs().length == 1) {
 				return Arrays.asList("nbs", "opennbs", "sng", "sng-archive", "rsng", "settings");
 			}
 			
