@@ -44,6 +44,7 @@ public class RSNGSongLoader implements SongLoader {
 						break;
 					}
 				}
+				if(sInfo == null) throw new SongLoadingException("Song is empty");
 				String[] spl = sInfo.split(";");
 				for (String s : spl) {
 					String[] spl2 = s.split("=");
@@ -86,6 +87,7 @@ public class RSNGSongLoader implements SongLoader {
 							break;
 						}
 					}
+					if(cSounds == null) throw new SongLoadingException("Custom sounds are enabled, but empty");
 					String[] spl = cSounds.split(";");
 					for (String s : spl) {
 						String[] spl2 = s.split("=");

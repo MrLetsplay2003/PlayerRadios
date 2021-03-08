@@ -40,7 +40,7 @@ public class OpenNBSSongLoader implements SongLoader {
 			short fTB = dIn.readLEShort();
 			if(fTB != 0) throw new SongLoadingException("File is not an opennbs file (maybe it's a normal nbs file)");
 			byte nbsV = dIn.readByte();
-			if(nbsV > 4) throw new SongLoadingException("Invalid/Unsupported OpenNBS version: " + nbsV);
+			if(nbsV > 5) throw new SongLoadingException("Invalid/Unsupported OpenNBS version: " + nbsV);
 			dIn.readByte(); // Vanilla instrument count / First custom instrument index
 			if(nbsV >= 3) dIn.readLEShort(); // Song length
 			
