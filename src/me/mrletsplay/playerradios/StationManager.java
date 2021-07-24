@@ -25,9 +25,9 @@ import me.mrletsplay.playerradios.util.Tools;
 public class StationManager {
 
 	public static File stationFile = new File(Main.pl.getDataFolder(), "stations.yml");
-	public static BukkitCustomConfig stations = ConfigLoader.loadConfigFromFile(new BukkitCustomConfig(stationFile), stationFile, true);
+	public static BukkitCustomConfig stations = ConfigLoader.loadConfigFromFile(new BukkitCustomConfig(stationFile), stationFile);
 	public static File ostationFile = new File(Main.pl.getDataFolder(), "disabled-stations.yml");
-	public static BukkitCustomConfig ostations = ConfigLoader.loadConfigFromFile(new BukkitCustomConfig(ostationFile), ostationFile, true);
+	public static BukkitCustomConfig ostations = ConfigLoader.loadConfigFromFile(new BukkitCustomConfig(ostationFile), ostationFile);
 
 	@SuppressWarnings("deprecation")
 	public static void init() {

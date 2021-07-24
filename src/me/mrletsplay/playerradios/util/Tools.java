@@ -222,7 +222,7 @@ public class Tools {
 		} catch (IOException e) {
 			return -1;
 		} finally {
-			conn.disconnect();
+			if(conn != null) conn.disconnect();
 		}
 	}
 	
