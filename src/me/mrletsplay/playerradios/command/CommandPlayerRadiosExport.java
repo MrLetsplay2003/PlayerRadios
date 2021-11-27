@@ -100,7 +100,7 @@ public class CommandPlayerRadiosExport extends BukkitCommand {
 					p.sendMessage(Config.getMessage("export.not-available"));
 					return;
 				}
-				Song s = SongManager.getSongByID(Integer.parseInt(args[1]));
+				Song s = SongManager.getSongByID(Integer.parseInt(args[0]));
 				if(s == null) {
 					p.sendMessage(Config.getMessage("export.invalid-song"));
 					return;
