@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
@@ -32,14 +31,15 @@ import me.mrletsplay.mrcore.bukkitimpl.ItemUtils;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedDyeColor;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedMaterial;
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
+import me.mrletsplay.mrcore.misc.StringUtils;
 import me.mrletsplay.playerradios.Config;
 
 public class Tools {
 
 	private static DecimalFormat df = new DecimalFormat("##.##");
-	
+
 	private static final Map<Integer, VersionedSound> SOUNDS;
-	
+
 	static {
 		SOUNDS = new HashMap<>();
 		SOUNDS.put(0, VersionedSound.BLOCK_NOTE_BLOCK_HARP);
@@ -84,7 +84,7 @@ public class Tools {
 		i.setItemMeta(m);
 		return i;
 	}
-	
+
 	@Deprecated
 	public static ItemStack bannerStack(VersionedDyeColor color) {
 		return ItemUtils.createVersioned(VersionedMaterial.getBanner(color));
@@ -105,7 +105,7 @@ public class Tools {
 			return false;
 		}
 	}
-	
+
 	public static VersionedSound getSound(int instrument) {
 		return SOUNDS.get(instrument);
 	}
@@ -113,20 +113,20 @@ public class Tools {
 	public static short highestSoundID() {
 		return SOUNDS.keySet().stream().max(Integer::compare).map(Integer::shortValue).get();
 	}
-	
+
 	public static int getSoundID(VersionedSound sound) {
 		return SOUNDS.entrySet().stream().filter(en -> en.getValue().equals(sound)).map(en -> en.getKey()).findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid sound"));
 	}
-	
+
 	public static String httpPost(URL url, String... params) throws IOException {
 		String urlParameters = Arrays.stream(params).collect(Collectors.joining("&"));
 		byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
 		int postDataLength = postData.length;
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();           
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setDoOutput(true);
 		conn.setInstanceFollowRedirects(false);
 		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 		conn.setRequestProperty("charset", "utf-8");
 		conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
 		conn.setUseCaches(false);
@@ -137,7 +137,7 @@ public class Tools {
 		in.read(dat);
 		return new String(dat).trim();
 	}
-	
+
 	public static String httpGet(URL url, String... params) throws IOException {
 		URL url2 = new URL(url.toString()+"?"+Arrays.stream(params).collect(Collectors.joining("&")));
 		InputStream in = url2.openStream();
@@ -145,7 +145,7 @@ public class Tools {
 		in.read(dat);
 		return new String(dat).trim();
 	}
-	
+
 	public static String formatTime(int ms) {
 		String[] formats = Config.getMessage("time-format").split(",");
 		if(ms<60000) {
@@ -179,10 +179,10 @@ public class Tools {
 	}
 
 	public static List<String> split(String s, int len, String col) {
-		String[] spl = WordUtils.wrap(col + s, 50).split(System.getProperty("line.separator"));
+		List<String> spl = StringUtils.wrapString(col + s, 50);
 		List<String> fn = new ArrayList<>();
-		for (int i1 = 0; i1 < spl.length; i1++) {
-			fn.add(col + spl[i1]);
+		for (String sp : spl) {
+			fn.add(col + sp);
 		}
 		return fn;
 	}
@@ -225,7 +225,7 @@ public class Tools {
 			if(conn != null) conn.disconnect();
 		}
 	}
-	
+
 	public static double similarity(String f, String f2){
 		char[] ch = f.toCharArray();
 		char[] ch2 = f2.toCharArray();
@@ -259,9 +259,9 @@ public class Tools {
 			p.getWorld().dropItem(p.getLocation(), i);
 		}
 	}
-	
+
 	public static boolean isUUID(String s) {
 		return s.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
 	}
-	
+
 }
