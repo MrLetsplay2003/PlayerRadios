@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.mrcore.io.IOUtils;
@@ -85,7 +86,7 @@ public class NBSSongLoader implements SongLoader {
 					songHeight = (short) Math.max(songHeight, layer);
 					byte instrument = dIn.readByte();
 					byte note = dIn.readByte();
-					Layer l = layers.get((int) layer);
+					Layer l = getLayer(layers, layer);
 					VersionedSound s = Tools.getSound(instrument);
 					if (s == null) throw new SongLoadingException("Invalid instrument id");
 					int p = note - 33;
@@ -102,13 +103,13 @@ public class NBSSongLoader implements SongLoader {
 			}
 			try {
 				for (int i = 0; i < songHeight; i++) {
-					Layer l = layers.get(i);
+					Layer l = getLayer(layers, i);
 					dIn.readLEString(); // Layer name
 					l.setVolume(dIn.readByte());
 				}
 			} catch (Exception e) {
 				for (int i = 0; i < songHeight; i++) {
-					Layer l = layers.get(i);
+					Layer l = getLayer(layers, i);
 					l.setVolume(100);
 				}
 			}
@@ -117,6 +118,15 @@ public class NBSSongLoader implements SongLoader {
 					new Song(-1, length, songHeight, title, layers, speed, (author.equals("") ? null : author),
 							(originalAuthor.equals("") ? null : originalAuthor), null, null));
 		}
+	}
+
+	private Layer getLayer(Map<Integer, Layer> layers, int layer) {
+		Layer l = layers.get(layer);
+		if(l == null) {
+			l = new Layer();
+			layers.put(layer, l);
+		}
+		return l;
 	}
 
 	@Override
@@ -159,7 +169,7 @@ public class NBSSongLoader implements SongLoader {
 						skipLayers++;
 						continue;
 					}
-					dO.writeLEShort((short) ((short) skipLayers + 1));
+					dO.writeLEShort((short) (skipLayers + 1));
 					skipLayers = 0;
 					int sound = Tools.getSoundID(n.getSound());
 					if(sound > 9) {
@@ -181,7 +191,7 @@ public class NBSSongLoader implements SongLoader {
 			dO.close();
 		}
 	}
-	
+
 	@Override
 	public boolean supportsSongArchives() {
 		return false;

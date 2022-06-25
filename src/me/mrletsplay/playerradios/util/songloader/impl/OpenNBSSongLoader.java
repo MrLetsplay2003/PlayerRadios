@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.mrcore.io.IOUtils;
@@ -26,7 +27,7 @@ public class OpenNBSSongLoader implements SongLoader {
 	public String getName() {
 		return "opennbs";
 	}
-	
+
 	@Override
 	public String getFileExtension() {
 		return "nbs";
@@ -43,12 +44,12 @@ public class OpenNBSSongLoader implements SongLoader {
 			if(nbsV > 5) throw new SongLoadingException("Invalid/Unsupported OpenNBS version: " + nbsV);
 			dIn.readByte(); // Vanilla instrument count / First custom instrument index
 			if(nbsV >= 3) dIn.readLEShort(); // Song length
-			
+
 			short songHeight = dIn.readLEShort();
 			for(int i = 0; i < songHeight; i++) {
 				layers.put(i, new Layer());
 			}
-			
+
 			String title = dIn.readLEString();
 			if (title.equals(""))
 				title = file.getName().substring(0, file.getName().lastIndexOf('.'))
@@ -68,7 +69,7 @@ public class OpenNBSSongLoader implements SongLoader {
 					}
 				}
 			}
-			
+
 			dIn.readLEString(); // Description
 			float speed = dIn.readLEShort() / 100f;
 			dIn.readBoolean(); // Auto-save
@@ -80,13 +81,13 @@ public class OpenNBSSongLoader implements SongLoader {
 			dIn.readLEInt(); // Blocks added
 			dIn.readLEInt(); // Blocks removed
 			dIn.readLEString(); // Midi/schematic file name
-			
+
 			if(nbsV >= 4) {
 				dIn.readBoolean(); // TODO: Looping on/off
 				dIn.readByte(); // Max loop count
 				dIn.readLEShort(); // Loop start tick
 			}
-			
+
 			short tick = -1;
 			while (true) {
 				short jTicks = dIn.readLEShort(); // jumps to next tick
@@ -105,7 +106,7 @@ public class OpenNBSSongLoader implements SongLoader {
 					songHeight = (short) Math.max(songHeight, layer);
 					byte instrument = dIn.readByte();
 					byte note = dIn.readByte();
-					Layer l = layers.get((int) layer);
+					Layer l = getLayer(layers, layer);
 					VersionedSound s = Tools.getSound(instrument);
 					if (s == null) throw new SongLoadingException("Invalid instrument id");
 					int p = note - 33;
@@ -117,7 +118,7 @@ public class OpenNBSSongLoader implements SongLoader {
 							p += 12;
 						}
 					}
-					
+
 					if(nbsV >= 4) {
 						int velocity = dIn.readByte();
 						int panning = dIn.readByte();
@@ -128,10 +129,10 @@ public class OpenNBSSongLoader implements SongLoader {
 					}
 				}
 			}
-			
+
 			try {
 				for (int i = 0; i < songHeight; i++) {
-					Layer l = layers.get(i);
+					Layer l = getLayer(layers, i);
 					dIn.readLEString(); // Layer name
 					l.setVolume(dIn.readByte());
 					if(nbsV >= 2) {
@@ -142,17 +143,26 @@ public class OpenNBSSongLoader implements SongLoader {
 				}
 			} catch (Exception e) {
 				for (int i = 0; i < songHeight; i++) {
-					Layer l = layers.get(i);
+					Layer l = getLayer(layers, i);
 					l.setVolume(100);
 					l.setStereo(100);
 				}
 			}
-			
+
 			// TODO: Custom instruments are ignored
 			return Collections.singletonList(
 					new Song(-1, length, songHeight, title, layers, speed, (author.equals("") ? null : author),
 							(originalAuthor.equals("") ? null : originalAuthor), null, null));
 		}
+	}
+
+	private Layer getLayer(Map<Integer, Layer> layers, int layer) {
+		Layer l = layers.get(layer);
+		if(l == null) {
+			l = new Layer();
+			layers.put(layer, l);
+		}
+		return l;
 	}
 
 	@Override
@@ -197,7 +207,7 @@ public class OpenNBSSongLoader implements SongLoader {
 						skipLayers++;
 						continue;
 					}
-					dO.writeLEShort((short) ((short) skipLayers + 1));
+					dO.writeLEShort((short) (skipLayers + 1));
 					skipLayers = 0;
 					dO.write(Tools.getSoundID(n.getSound()));
 					dO.write(n.getNote() + 33);
@@ -214,10 +224,10 @@ public class OpenNBSSongLoader implements SongLoader {
 			dO.write(0);
 		}
 	}
-	
+
 	@Override
 	public boolean supportsSongArchives() {
 		return false;
 	}
-	
+
 }

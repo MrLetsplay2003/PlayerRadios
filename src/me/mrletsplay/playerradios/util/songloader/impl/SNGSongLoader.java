@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.mrletsplay.mrcore.bukkitimpl.versioned.VersionedSound;
 import me.mrletsplay.mrcore.io.IOUtils;
@@ -63,10 +64,10 @@ public class SNGSongLoader implements SongLoader {
 					if (nType == 0) {
 						// Note
 						int data = in.readUnsignedByte();
-						Layer l = layers.get(currLayer);
+						Layer l = getLayer(layers, currLayer);
 						while (l.getNote(currTick) != null) {
 							currLayer++;
-							l = layers.get(currLayer);
+							l = getLayer(layers, currLayer);
 						}
 						l.setVolume(100);
 						VersionedSound s = Tools.getSound(data);
@@ -101,6 +102,15 @@ public class SNGSongLoader implements SongLoader {
 			}
 			return songs;
 		}
+	}
+
+	private Layer getLayer(Map<Integer, Layer> layers, int layer) {
+		Layer l = layers.get(layer);
+		if(l == null) {
+			l = new Layer();
+			layers.put(layer, l);
+		}
+		return l;
 	}
 
 	@Override
