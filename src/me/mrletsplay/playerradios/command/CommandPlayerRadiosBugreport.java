@@ -16,13 +16,13 @@ import me.mrletsplay.playerradios.StationManager;
 import me.mrletsplay.playerradios.util.PasteText;
 
 public class CommandPlayerRadiosBugreport extends BukkitCommand {
-	
+
 	public CommandPlayerRadiosBugreport() {
 		super("bugreport");
 		setDescription("Shows the current version of PlayerRadios and checks for an update");
 		setUsage("/playerradios bugreport");
 	}
-	
+
 	@Override
 	public void action(CommandInvokedEvent event) {
 		CommandSender sender = ((BukkitCommandSender) event.getSender()).getBukkitSender();
@@ -30,22 +30,26 @@ public class CommandPlayerRadiosBugreport extends BukkitCommand {
 			sender.sendMessage("§cOnly players can use this command");
 			return;
 		}
-		
+
 		Player p = (Player) sender;
-		
+
 		if(!p.hasPermission(Config.PERM_ALLOW_BUGREPORT)) {
 			sender.sendMessage(Config.getMessage("no-permission"));
 			return;
 		}
-		
+
 		try {
 			List<String> config = Files.readAllLines(Config.config.getConfigFile().toPath());
-			List<String> stations = Files.readAllLines(StationManager.stationFile.toPath());
+
+			List<String> stations = null;
+			if(StationManager.stationFile.exists()) {
+				stations = Files.readAllLines(StationManager.stationFile.toPath());
+			}
 			p.sendMessage(Config.getMessage("bugreport.success", "link", PasteText.glotSafe(
 					"config.yml",
 					config.stream().collect(Collectors.joining("\n")),
 					"stations.yml",
-					stations.stream().collect(Collectors.joining("\n")))));
+					stations == null ? "(file is empty)" : stations.stream().collect(Collectors.joining("\n")))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
