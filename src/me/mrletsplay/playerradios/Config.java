@@ -12,24 +12,24 @@ import me.mrletsplay.mrcore.config.CustomConfig;
 import me.mrletsplay.mrcore.config.FileCustomConfig;
 
 public class Config {
-	
+
 	public static FileCustomConfig config = ConfigLoader.loadFileConfig(new File(Main.pl.getDataFolder(), "config.yml"));
 	public static CustomConfig messages;
-	
-	public static boolean enable_update_check, update_check_on_join, update_check_on_command, use_fixed_playback, 
+
+	public static boolean enable_update_check, update_check_on_join, update_check_on_command, use_fixed_playback,
 		use_alternate_nbs_import, detect_original_author, fix_song_ids, allow_color, color_needs_permission, autodelete,
-		use_uuids = Bukkit.getServer().getOnlineMode(), allow_create_stations, enable_particles, 
+		use_uuids = Bukkit.getServer().getOnlineMode(), allow_create_stations, enable_particles,
 		show_automatically_named, thread_on_process, enable_submit, submit_needs_perm, remove_icon_items, auto_close_song_gui,
 		world_list_blacklist, disable_commands, disable_commands_all, songsettings_auto, save_last_listened, allow_station_name_edit;
-	
-	public static int max_station_name_length, max_stations_per_player, sleep_ticks, result_amount, max_type_time, 
+
+	public static int max_station_name_length, max_stations_per_player, sleep_ticks, result_amount, max_type_time,
 		thread_on_process_when, default_station, submit_max_file_size, gui_refresh_interval_ms, autodelete_days;
-	
+
 	public static String inventory_name, default_author, language;
 	public static List<String> true_keywords, world_list;
-	
+
 	private static final String PERM_BASE = "playerradios.";
-	
+
 	public static final String PERM_NOTIFY_UPDATE = PERM_BASE+"notify-update",
 							   PERM_CREATE_WHEN_DISABLED = PERM_BASE+"create-when-disabled",
 							   PERM_EDIT_OTHER = PERM_BASE+"edit-other",
@@ -42,11 +42,11 @@ public class Config {
 							   PERM_ALLOW_BUGREPORT = PERM_BASE+"allow-bugreport",
 							   PERM_RENAME_WHEN_DISABLED = PERM_BASE+"rename-when-disabled",
 							   PERM_FORCE = PERM_BASE+"force";
-	
+
 	public static void save(){
 		config.saveToFile();
 	}
-	
+
 	public static void init(){
 		config.setHeader(" Plugin version: "+Main.pluginVersion+"\n");
 		config.setComment("use-uuids", " Should always be enabled (will automatically be disabled if server is in offline/cracked mode)");
@@ -68,7 +68,7 @@ public class Config {
 		config.setComment("disable-commands.do", " If enabled, players won't be able to use /pr station <...> commands");
 		config.setComment("disable-commands.all", " This will disable all commands (including /pr <search/playlist/...>) except for admin commands (/pr <reload/version/...>) and /pr help");
 		config.setComment("autodelete", " If enabled, stations will automatically get deleted after the user has been offline/inactive for a certain amount of time (You can enable \"dontautodelete\" in the stations file for a station to not be auto-deleted)");
-		
+
 		enable_update_check = config.getBoolean("update-check.enable", true, true);
 		update_check_on_join = config.getBoolean("update-check.on-join", true, true);
 		update_check_on_command = config.getBoolean("update-check.on-command", true, true);
@@ -111,28 +111,28 @@ public class Config {
 		config.addDefault("inventory-name", "%prefix%");
 		config.addDefault("default-station-name", "Default station");
 		allow_station_name_edit = config.getBoolean("allow-station-name-edit", true, true);
-		
+
 		config.applyDefaults();
 		config.saveToFile();
 		save();
-		
+
 		inventory_name = getAndTranslate("config", "inventory-name");
-		
+
 		importLangFile("de");
 		importLangFile("ru");
 		importLangFile("sr");
 		importLangFile("zh");
-		
+
 		File langFile = new File(Main.pl.getDataFolder(), "/lang/"+language+".yml");
 		messages = getMessageConfig(langFile);
 	}
-	
+
 	private static void importLangFile(String lang) {
 		if(!new File(Main.pl.getDataFolder(), "/lang/"+lang+".yml").exists()) {
 			Main.pl.saveResource("lang/"+lang+".yml", false);
 		}
 	}
-	
+
 	private static CustomConfig getMessageConfig(File f) {
 		FileCustomConfig c = ConfigLoader.loadFileConfig(f);
 		c.addDefault("creation-disabled", "%prefix% §cThe creation of stations is currently disabled");
@@ -268,18 +268,18 @@ public class Config {
 		c.addDefault("no-permission", "%prefix% §cYou don't have permission to use that command");
 //		c.addDefault("songinfo.song-doesnt-exist", "%prefix% §cThat song doesn't exist");
 //		c.addDefault("songinfo.", "%prefix% §cThat song doesn't exist");
-		
+
 		c.addDefault("placeholderapi.listening.station.none", "None");
 		c.addDefault("placeholderapi.listening.station.owner.none", "-");
 		c.addDefault("placeholderapi.listening.time.none", "-");
 		c.addDefault("placeholderapi.listening.song.none", "None");
 		c.addDefault("placeholderapi.listening.song.format", "%original-author% - %song-name% (by %author%) | %song-id%");
-		
+
 		c.applyDefaults();
 		c.saveToFile();
 		return c;
 	}
-	
+
 	public static String getAndTranslate(String file, String path) {
 		String msg = null;
 		if(file.equalsIgnoreCase("messages")) {
@@ -293,11 +293,11 @@ public class Config {
 				.replace("%max-stations%", max_stations_per_player+"")
 				.replace("%prefix%", config.getString("prefix")));
 	}
-	
+
 	public static String getMessage(String msg) {
 		return getAndTranslate("messages", msg);
 	}
-	
+
 	public static String getMessage(String msg, String... params) {
 		if(params.length%2!=0) return null;
 		String msg2 = getAndTranslate("messages", msg);
@@ -306,7 +306,7 @@ public class Config {
 		}
 		return msg2;
 	}
-	
+
 	public static String getHelpMessage(String cmd, String label, String args, String... params) {
 		String s = getMessage("help.layout")
 				.replace("%description%", getMessage("help."+cmd))
@@ -314,9 +314,9 @@ public class Config {
 				.replace("%args%", args);
 		if(params.length%2 != 0) return s;
 		for(int i = 0; i < params.length; i+=2) {
-			s.replace("%"+params[i]+"%", params[i+1]);
+			s = s.replace("%"+params[i]+"%", params[i+1]);
 		}
 		return s;
 	}
-	
+
 }
